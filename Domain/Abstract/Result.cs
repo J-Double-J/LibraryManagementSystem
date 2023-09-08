@@ -14,6 +14,8 @@
                 throw new InvalidOperationException();
             }
 
+            IsSuccess = isSuccess;
+            Error = error;
         }
 
         public bool IsSuccess { get; private init; }
