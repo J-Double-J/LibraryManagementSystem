@@ -22,8 +22,7 @@ namespace Application.Behaviors
 
             var result = await next();
 
-            _logger.LogInformation("Starting request {@RequestName}, {@DateTimeUtc}", typeof(TRequest).Name, DateTime.UtcNow);
-
+            _logger.LogInformation("Executed request {@RequestName}, {@DateTimeUtc}", typeof(TRequest).Name, DateTime.UtcNow);
 
             return result;
         }

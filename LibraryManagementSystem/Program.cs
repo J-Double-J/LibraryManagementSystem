@@ -1,9 +1,8 @@
 using Application;
-using Application.Behaviors;
 using Infrastructure;
-using MediatR;
 using Presentation;
 using Serilog;
+using Serilog.Formatting.Compact;
 
 namespace LibraryManagementSystem
 {
@@ -24,9 +23,7 @@ namespace LibraryManagementSystem
                 .AddInfrastructure()
                 .AddPresentation();
 
-            builder.Services.AddLogging();
-
-            //builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
+            builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
             var app = builder.Build();
 
@@ -37,7 +34,7 @@ namespace LibraryManagementSystem
                 app.UseSwaggerUI();
             }
 
-            //app.UseSerilogRequestLogging();
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
 
