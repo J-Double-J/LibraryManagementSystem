@@ -1,5 +1,6 @@
 using Application;
 using Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Presentation;
 using Serilog;
 using Serilog.Formatting.Compact;
@@ -22,6 +23,12 @@ namespace LibraryManagementSystem
                 .AddApplication()
                 .AddInfrastructure()
                 .AddPresentation();
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly("LibraryManagementSystem")
+                ));
+            builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
             builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
