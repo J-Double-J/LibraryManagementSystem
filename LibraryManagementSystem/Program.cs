@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Presentation;
 using Serilog;
 using Newtonsoft.Json;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Any;
 
 namespace LibraryManagementSystem
 {
@@ -17,7 +19,13 @@ namespace LibraryManagementSystem
 
             builder.Services.AddControllers().AddNewtonsoftJson();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+                options.MapType<DateOnly>(() => new OpenApiSchema
+                {
+                    Type = "string",
+                    Format = "date",
+                    Example = new OpenApiString("2023-01-01")
+                }));
 
             builder.Services
                 .AddApplication()
