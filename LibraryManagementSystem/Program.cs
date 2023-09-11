@@ -3,7 +3,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Presentation;
 using Serilog;
-using Serilog.Formatting.Compact;
+using Newtonsoft.Json;
 
 namespace LibraryManagementSystem
 {
@@ -15,7 +15,7 @@ namespace LibraryManagementSystem
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddNewtonsoftJson();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -26,8 +26,8 @@ namespace LibraryManagementSystem
 
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(
                     builder.Configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly("LibraryManagementSystem")
-                ));
+                    b => b.MigrationsAssembly(typeof(Program).Assembly.FullName)
+                )) ;
             builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
             builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
