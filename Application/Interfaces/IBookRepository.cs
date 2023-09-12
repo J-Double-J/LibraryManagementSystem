@@ -1,10 +1,12 @@
-﻿using Domain.Entities;
+﻿using Domain.Abstract;
+using Domain.Entities;
 
 namespace Application
 {
     public interface IBookRepository
     {
-        Task<IEnumerable<Book>> GetAllBooks();
-        Task AddBook(Book book);
+        Task<Result<IEnumerable<Book>>> GetAllBooks();
+        Task<Result> AddBook(Book book);
+        Task<Result> DeleteBook(Guid guid);
     }
 }

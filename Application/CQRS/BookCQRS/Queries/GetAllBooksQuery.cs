@@ -15,8 +15,8 @@ namespace Application.CQRS.BookCQRS.Queries
 
             public async Task<Result<IEnumerable<Book>>> Handle(GetAllBooksQuery query, CancellationToken cancellationToken)
             {
-                IEnumerable<Book> books = await _bookRepository.GetAllBooks();
-                return Result.Success(books);
+                Result<IEnumerable<Book>> booksResult = await _bookRepository.GetAllBooks();
+                return booksResult;
             }
         }
     }
