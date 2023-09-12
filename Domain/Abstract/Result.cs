@@ -30,6 +30,6 @@
 
         public static Result Failure(Error error) => new(false, error);
 
-        public static Result<TValue> Failure<TValue>(TValue value, Error error) => new(value, false, error);
+        public static Result<TValue> Failure<TValue>(TValue? value, Error error) => new(value, false, error);
     }
 }

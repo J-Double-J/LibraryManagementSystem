@@ -4,7 +4,7 @@ namespace Domain.Errors
 {
     public class DomainErrors
     {
-        public static class Book
+        public static class BookErrors
         {
             public static readonly Error NegativeOrZeroPages = new Error(
                 "Book.NegativeOrZeroPages",

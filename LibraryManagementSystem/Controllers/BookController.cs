@@ -31,7 +31,7 @@ namespace Infrastructure
         {
             Result<Book> result = await _mediator.Send(createBookCommand);
 
-            return result.IsSuccess ? Ok(result.Value) : NotFound(result.Error);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
     }
 }

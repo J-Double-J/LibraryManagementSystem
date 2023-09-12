@@ -1,11 +1,13 @@
 ﻿using Domain.Abstract;
 using Domain.Entities;
-using MediatR;
 
 namespace Application.CQRS.BookCQRS.Commands
 {
     public class CreateBookCommand : ICommand<Book>
     {
+        public const int MAX_LENGTH_TITLE = 128;
+        public const int MAX_LENGTH_PUBLISHER = 128;
+
         public string Author { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
@@ -42,7 +44,7 @@ namespace Application.CQRS.BookCQRS.Commands
 
             public async Task<Result<Book>> Handle(CreateBookCommand command, CancellationToken cancellationToken)
             {
-                Book book = Book.Create(Guid.NewGuid(),
+                Result<Book> bookResult = Book.Create(
                     command.Author,
                     command.Title,
                     command.Description,
@@ -51,9 +53,12 @@ namespace Application.CQRS.BookCQRS.Commands
                     command.Publisher,
                     command.DateRecieved);
 
-                await _repository.AddBook(book);
+                if(bookResult.IsSuccess)
+                {
+                    await _repository.AddBook(bookResult.Value);
+                }
 
-                return book;
+                return bookResult;
             }
         }
     }

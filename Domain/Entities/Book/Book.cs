@@ -2,11 +2,15 @@
 using Domain.Errors;
 using Domain.Exceptions;
 using Domain.Primitives;
+using Fluent = FluentValidation.Results;
 
 namespace Domain.Entities
 {
     public sealed class Book : Entity
     {
+        public const int MAX_LENGTH_TITLE = 128;
+        public const int MAX_LENGTH_PUBLISHER = 128;
+
         private Book(Guid id,
             string author,
             string title,
@@ -61,7 +65,7 @@ namespace Domain.Entities
         /// </summary>
         public DateOnly DateRecieved { get; init; }
 
-        public static Book Create(Guid id,
+        public static Result<Book> Create(
             string author,
             string title,
             string description,
@@ -70,26 +74,19 @@ namespace Domain.Entities
             string publisher,
             DateOnly dateRecieved)
         {
-            Book book = new(id, author, title, description, pages, datePublished, publisher, dateRecieved);
+            Book book = new(Guid.NewGuid(), author, title, description, pages, datePublished, publisher, dateRecieved);
 
-            Result validationResult = ValidateBook(book);
+            BookValidator bookValidator = new();
 
-            if(validationResult.IsFailure)
+            Fluent.ValidationResult validationResult = bookValidator.Validate(book);
+
+            if (!validationResult.IsValid)
             {
-                throw new ArgumentException(validationResult.Error?.Message, nameof(pages));
+                string errorMessages = string.Join(Environment.NewLine, validationResult.Errors.Select(error => error.ErrorMessage));
+                return Result.Failure<Book>(null, new("Book.CreateValidationError", errorMessages));
             }
 
             return book;
-        }
-
-        private static Result ValidateBook(Book book)
-        {
-            if (book.Pages < 0)
-            {
-                return Result.Failure(DomainErrors.Book.NegativeOrZeroPages);
-            }
-
-            return Result.Success();
         }
     }
 }
