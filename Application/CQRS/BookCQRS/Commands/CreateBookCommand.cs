@@ -1,9 +1,10 @@
-﻿using Domain.Entities;
+﻿using Domain.Abstract;
+using Domain.Entities;
 using MediatR;
 
 namespace Application.CQRS.BookCQRS.Commands
 {
-    public class CreateBookCommand :IRequest<Book>
+    public class CreateBookCommand : ICommand<Book>
     {
         public string Author { get; set; }
         public string Title { get; set; }
@@ -31,7 +32,7 @@ namespace Application.CQRS.BookCQRS.Commands
             DateRecieved = dateRecieved;
         }
 
-        public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand, Book>
+        public class CreateBookCommandHandler : ICommandHandler<CreateBookCommand, Book>
         {
             private readonly IBookRepository _repository;
             public CreateBookCommandHandler(IBookRepository bookRepository)
@@ -39,7 +40,7 @@ namespace Application.CQRS.BookCQRS.Commands
                 _repository = bookRepository;
             }
 
-            public async Task<Book> Handle(CreateBookCommand command, CancellationToken cancellationToken)
+            public async Task<Result<Book>> Handle(CreateBookCommand command, CancellationToken cancellationToken)
             {
                 Book book = Book.Create(Guid.NewGuid(),
                     command.Author,

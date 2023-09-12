@@ -11,6 +11,11 @@ namespace Infrastructure
             _context = applicationDbContext;
         }
 
+        public async Task<IEnumerable<Book>> GetAllBooks()
+        {
+            return _context.Books;
+        }
+
         public async Task AddBook(Book book)
         {
             _context.Books.Add(book);

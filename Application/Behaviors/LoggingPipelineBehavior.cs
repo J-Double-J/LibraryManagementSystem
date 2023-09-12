@@ -6,7 +6,7 @@ namespace Application.Behaviors
 {
     public class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
-        //where TResponse : Result
+        where TResponse : Result
     {
         private readonly ILogger<LoggingPipelineBehavior<TRequest, TResponse>> _logger;
 

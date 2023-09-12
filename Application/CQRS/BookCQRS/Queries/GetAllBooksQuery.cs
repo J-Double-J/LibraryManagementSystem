@@ -1,21 +1,22 @@
-﻿using Domain.Entities;
-using MediatR;
+﻿using Domain.Abstract;
+using Domain.Entities;
 
 namespace Application.CQRS.BookCQRS.Queries
 {
-    public class GetAllBooksQuery : IRequest<IEnumerable<Book>>
+    public sealed class GetAllBooksQuery : IQuery<IEnumerable<Book>>
     {
-        public class GetAllBooksQueryHandler : IRequestHandler<GetAllBooksQuery, IEnumerable<Book>>
+        public sealed class GetAllBooksQueryHandler : IQueryHandler<GetAllBooksQuery, IEnumerable<Book>>
         {
-            public async Task<IEnumerable<Book>> Handle(GetAllBooksQuery query, CancellationToken cancellationToken)
+            private readonly IBookRepository _bookRepository;
+            public GetAllBooksQueryHandler(IBookRepository bookRepository)
             {
-                return new List<Book> { Book.Create(new Guid(), "Placeholder Author",
-                        "Placeholder Title",
-                        "Placeholder Description",
-                        1,
-                        DateOnly.FromDateTime(DateTime.Now),
-                        "Placeholder Publisher",
-                        DateOnly.FromDateTime(DateTime.Now)) };
+                _bookRepository = bookRepository;
+            }
+
+            public async Task<Result<IEnumerable<Book>>> Handle(GetAllBooksQuery query, CancellationToken cancellationToken)
+            {
+                IEnumerable<Book> books = await _bookRepository.GetAllBooks();
+                return Result.Success(books);
             }
         }
     }
