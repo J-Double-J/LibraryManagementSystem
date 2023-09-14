@@ -11,9 +11,9 @@
             Message = message;
         }
 
-        public string Code { get; private init; }
+        public string Code { get; protected set; }
 
-        public string Message { get; private init; }
+        public string Message { get; protected set; }
 
         public static implicit operator string(Error error) => error.Code;
 
