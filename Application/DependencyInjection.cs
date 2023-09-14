@@ -14,8 +14,9 @@ namespace Application
 
             services.AddMediatR(configuration => configuration.RegisterServicesFromAssemblies(assembly));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
-            services.AddValidatorsFromAssembly(assembly);
+            services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
 
             return services;
         }

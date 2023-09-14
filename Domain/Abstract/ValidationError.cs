@@ -1,7 +1,20 @@
 ﻿namespace Domain.Abstract
 {
+    /// <summary>
+    /// Class for Validation Errors.
+    /// </summary>
     public class ValidationError : Error
     {
+        /// <summary>
+        /// Validation Error for constructor.
+        /// </summary>
+        /// <param name="messageHeader">String to display in message before error. Note that a new line is inserted at the end.</param>
+        /// <param name="errorMessage">Error message for validation.</param>
+        public ValidationError(string messageHeader, string errorMessage) : base("ValidationError", errorMessage)
+        {
+            ValidationMessages = new string[] { errorMessage };
+        }
+
         /// <summary>
         /// Validation Error constructor that has a message before listing out all validation error messages.
         /// </summary>

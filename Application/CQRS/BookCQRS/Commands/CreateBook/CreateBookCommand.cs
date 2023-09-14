@@ -5,9 +5,6 @@ namespace Application.CQRS.BookCQRS.Commands
 {
     public class CreateBookCommand : ICommand<Book>
     {
-        public const int MAX_LENGTH_TITLE = 128;
-        public const int MAX_LENGTH_PUBLISHER = 128;
-
         public string Author { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

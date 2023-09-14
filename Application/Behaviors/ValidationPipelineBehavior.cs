@@ -1,12 +1,14 @@
-﻿using Domain.Abstract;
+﻿using Application.CQRS;
+using Domain.Abstract;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+using System.Linq;
 
 namespace Application.Behaviors
 {
     public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
+        where TRequest : ICommandBase
         where TResponse : Result
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
@@ -18,16 +20,14 @@ namespace Application.Behaviors
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            if (_validators.Any())
-            {
-                return await next();
-            }
+            var context = new ValidationContext<TRequest>(request);
 
-            Error[] errors = _validators
-                .Select(validator => validator.Validate(request))
+            var validationFailures = await Task.WhenAll(_validators.Select(validator => validator.ValidateAsync(context)));
+            Error[] errors = validationFailures
+                .Where(ValidationResult => !ValidationResult.IsValid)
                 .SelectMany(validationResult => validationResult.Errors)
-                .Where(validationFailure => validationFailure is not null)
-                .Select(failure => new Error(failure.PropertyName, failure.ErrorMessage))
+                .Select(failure => new ValidationError("Validation Failure for the following properties: ",
+                                                       $"Property `{failure.PropertyName}`: {failure.ErrorMessage}"))
                 .Distinct()
                 .ToArray();
 

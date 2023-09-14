@@ -33,7 +33,17 @@ namespace Infrastructure
         {
             Result<Book> result = await _mediator.Send(createBookCommand);
 
-            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+            if(result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+
+            if (result is ValidationResult<Book> validationResult && !validationResult.IsSuccess)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            return BadRequest(result.Error);
         }
 
         [HttpPost("Remove")]

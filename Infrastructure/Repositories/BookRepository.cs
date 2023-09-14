@@ -18,11 +18,11 @@ namespace Infrastructure
         {
             try
             {
-                return _context.Books;
+                return await _context.Books.ToArrayAsync();
             }
             catch (Exception ex)
             {
-                return Result.Failure(Enumerable.Empty<Book>(), new(InfrastructureErrors.BookRepositoryErrors.BOOK_GETALL_ERROR, ex.Message));
+                return Result.Failure(Enumerable.Empty<Book>(), new(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
 
             }
         }
@@ -36,7 +36,7 @@ namespace Infrastructure
             }
             catch (Exception ex)
             {
-                return Result.Failure(new(InfrastructureErrors.BookRepositoryErrors.BOOK_ADD_ERROR, ex.Message));
+                return Result.Failure(new(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
             }
             
             return Result.Success();
@@ -46,7 +46,7 @@ namespace Infrastructure
         {
             try
             {
-                Book? book = _context.Books.FirstOrDefault(book => book.Id == guid);
+                Book? book = await _context.Books.FirstOrDefaultAsync(book => book.Id == guid);
 
                 if (book is not null)
                 {
@@ -61,9 +61,22 @@ namespace Infrastructure
             }
             catch (Exception ex)
             {
-                return Result.Failure(new(InfrastructureErrors.BookRepositoryErrors.BOOK_ID_NOT_FOUND, ex.Message));
+                return Result.Failure(new(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
             }
 
+        }
+
+        public async Task<Result<IEnumerable<Book>>> GetBooksByTitle(string title)
+        {
+            try
+            {
+                IEnumerable<Book> books = await _context.Books.Where(book => book.Title.ToUpper() == title.ToUpper()).ToArrayAsync();
+                return Result.Success(books);
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure(Enumerable.Empty<Book>(), new(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
+            }
         }
     }
 }
