@@ -1,6 +1,5 @@
 ﻿using Domain.Abstract;
 using FluentValidation.Results;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Domain.CustomFluentValidation
 {
