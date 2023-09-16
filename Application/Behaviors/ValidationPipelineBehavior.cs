@@ -1,9 +1,9 @@
 ﻿using Application.CQRS;
 using Domain.Abstract;
+using Domain.CustomFluentValidation;
 using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
-using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Behaviors
 {
@@ -12,34 +12,46 @@ namespace Application.Behaviors
         where TResponse : Result
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
+        private readonly ILogger<ValidationPipelineBehavior<TRequest, TResponse>> _logger;
 
-        public ValidationPipelineBehavior(IEnumerable<IValidator<TRequest>> validators)
+        public ValidationPipelineBehavior(IEnumerable<IValidator<TRequest>> validators, ILogger<ValidationPipelineBehavior<TRequest, TResponse>> logger)
         {
             _validators = validators;
+            _logger = logger;
         }
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var context = new ValidationContext<TRequest>(request);
 
-            var validationFailures = await Task.WhenAll(_validators.Select(validator => validator.ValidateAsync(context)));
-            Error[] errors = validationFailures
-                .Where(ValidationResult => !ValidationResult.IsValid)
-                .SelectMany(validationResult => validationResult.Errors)
-                .Select(failure => new ValidationError("Validation Failure for the following properties: ",
-                                                       $"Property `{failure.PropertyName}`: {failure.ErrorMessage}"))
-                .Distinct()
-                .ToArray();
-
-            if (errors.Any())
+            try
             {
-                return CreateValidationResult<TResponse>(errors);
-            }
+                var validationFailures = await Task.WhenAll(_validators.Select(validator => (validator as LibraryValidator<TRequest>)!.ValidateAsync(context)));
 
-            return await next();
+                ValidationError[] errors = validationFailures
+                    .Where(ValidationResult => !ValidationResult.IsValid)
+                    .SelectMany(validationResult => validationResult.Errors)
+                    .Select(failure => { _logger.LogInformation("Error code : {@error}", failure.ErrorCode); return failure; })
+                    .Select(failure => new ValidationError(failure.ErrorCode, "Validation Failure for the following: ",
+                                                           $"`{failure.PropertyName}`: {failure.ErrorMessage}"))
+                    .Distinct()
+                    .ToArray();
+
+                if (errors.Any())
+                {
+                    return CreateValidationResult<TResponse>(errors);
+                }
+
+                return await next();
+            }
+            catch (InvalidCastException)
+            {
+                _logger.LogCritical($"All validators must be of type {typeof(LibraryValidator<>)}");
+                throw;
+            }
         }
 
-        private static TResult CreateValidationResult<TResult>(Error[] errors)
+        private static TResult CreateValidationResult<TResult>(ValidationError[] errors)
             where TResult : Result
         {
             if (typeof(TResult) == typeof(Result))
@@ -50,7 +62,7 @@ namespace Application.Behaviors
             object validationResult = typeof(ValidationResult<>)
                 .GetGenericTypeDefinition()
                 .MakeGenericType(typeof(TResult).GenericTypeArguments[0])
-                .GetMethod(nameof(Domain.Abstract.ValidationResult.WithErrors))!
+                .GetMethod(nameof(Domain.Abstract.DomainValidationResult.WithErrors))!
                 .Invoke(null, new object?[] { errors })!;
 
             return (TResult)validationResult;

@@ -1,10 +1,11 @@
-﻿using FluentValidation;
+﻿using Domain.CustomFluentValidation;
+using FluentValidation;
 
 namespace Domain.Entities
 {
-    public class BookValidator : AbstractValidator<Book>
+    public class BookValidator : LibraryValidator<Book>
     {
-        public BookValidator()
+        public BookValidator() : base(LibraryValidatorType.Entity)
         {
             RuleFor(book => book.Author).NotEmpty();
 

@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Abstract
+﻿namespace Domain.Abstract
 {
     public class ValidationResult<TValue> : Result<TValue>, IValidationResult
     {
-        private ValidationResult(Error[] errors)
+        private ValidationResult(ValidationError[] errors)
             : base(default, false, IValidationResult.ValidationError)
         {
-            Errors = errors;
+            ValidationErrors = errors;
         }
 
-        public Error[] Errors { get; }
+        public ValidationError[] ValidationErrors { get; }
 
-        public static ValidationResult<TValue> WithErrors(Error[] errors) { return new ValidationResult<TValue>(errors); }
+        public static ValidationResult<TValue> WithErrors(ValidationError[] errors) { return new ValidationResult<TValue>(errors); }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Domain.Abstract
+﻿using Newtonsoft.Json;
+
+namespace Domain.Abstract
 {
     public class Error : IEquatable<Error>
     {
@@ -9,11 +11,22 @@
         {
             Code = code;
             Message = message;
+            IsInternalError = false;
+        } 
+
+        public Error(string code, string message, bool isInternalError)
+        {
+            Code = code;
+            Message = message;
+            IsInternalError = isInternalError;
         }
 
         public string Code { get; protected set; }
 
         public string Message { get; protected set; }
+
+        [JsonIgnore]
+        public bool IsInternalError { get; protected set; }
 
         public static implicit operator string(Error error) => error.Code;
 

@@ -38,9 +38,9 @@ namespace Infrastructure
                 return Ok(result.Value);
             }
 
-            if (result is ValidationResult<Book> validationResult && !validationResult.IsSuccess)
+            if (result is ValidationResult<Book> validationResult && validationResult.IsFailure)
             {
-                return BadRequest(validationResult.Errors);
+                return BadRequest(validationResult.ValidationErrors);
             }
 
             return BadRequest(result.Error);

@@ -65,7 +65,7 @@ namespace Domain.Entities
         /// </summary>
         public DateOnly DateRecieved { get; init; }
 
-        public static Result<Book> Create(
+        public static async Task<Result<Book>>  Create(
             string author,
             string title,
             string description,
@@ -78,12 +78,11 @@ namespace Domain.Entities
 
             BookValidator bookValidator = new();
 
-            Fluent.ValidationResult validationResult = bookValidator.Validate(book);
+            DomainValidationResult validationResult = await bookValidator.ValidateAsyncGetDomainResult(book);
 
-            if (!validationResult.IsValid)
+            if (validationResult.IsFailure)
             {
-                string errorMessages = string.Join(Environment.NewLine, validationResult.Errors.Select(error => error.ErrorMessage));
-                return Result.Failure<Book>(null, new("Book.CreateValidationError", errorMessages));
+                return Result.Failure<Book>(null, new("Book.CreateValidationError", validationResult.FlattenedErrorMessage));
             }
 
             return book;

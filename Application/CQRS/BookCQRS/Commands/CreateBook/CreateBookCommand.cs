@@ -41,7 +41,7 @@ namespace Application.CQRS.BookCQRS.Commands
 
             public async Task<Result<Book>> Handle(CreateBookCommand command, CancellationToken cancellationToken)
             {
-                Result<Book> bookResult = Book.Create(
+                Result<Book> bookResult = await Book.Create(
                     command.Author,
                     command.Title,
                     command.Description,
