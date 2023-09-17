@@ -40,7 +40,7 @@ namespace Infrastructure
 
             if (result is DomainValidationResult<Book> validationResult && validationResult.IsFailure)
             {
-                return BadRequest(validationResult);
+                return BadRequest(validationResult.ValidationErrors);
             }
 
             return BadRequest(result.Error);
@@ -62,6 +62,24 @@ namespace Infrastructure
             }
 
             return StatusCode(500, result.Error!.Message);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBookByID(Guid id)
+        {
+            Result<Book> result = await _mediator.Send(new GetBookByIDQuery(id));
+
+            if(result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+
+            if (result.Error!.Code == InfrastructureErrors.BookRepositoryErrors.BOOK_ID_NOT_FOUND)
+            {
+                return BadRequest(result);
+            }
+
+            return StatusCode(500, result.Error);
         }
     }
 }

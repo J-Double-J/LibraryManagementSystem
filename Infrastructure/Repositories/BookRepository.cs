@@ -78,5 +78,25 @@ namespace Infrastructure
                 return Result.Failure(Enumerable.Empty<Book>(), new(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
             }
         }
+
+        public async Task<Result<Book>> GetBookByID(Guid id)
+        {
+            try
+            {
+                Book? book = await _context.Books.FirstOrDefaultAsync(book => book.Id == id);
+
+                if (book is not null)
+                {
+                    return book;
+                }
+
+                return Result.Failure<Book>(null, new(InfrastructureErrors.BookRepositoryErrors.BOOK_ID_NOT_FOUND,
+                                                  $"No book with the ID `{id}` was found."));
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure<Book>(null, new(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
+            }
+        }
     }
 }
