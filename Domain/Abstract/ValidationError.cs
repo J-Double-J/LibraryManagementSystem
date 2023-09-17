@@ -9,8 +9,6 @@ namespace Domain.Abstract
     public class ValidationError : Error
     {
 
-        #region Constructors
-
         /// <summary>
         /// Validation Error for constructor.
         /// </summary>
@@ -19,63 +17,13 @@ namespace Domain.Abstract
         public ValidationError(string errorCode, string messageHeader, string errorMessage)
             : base(errorCode, string.Concat(messageHeader, Environment.NewLine, errorMessage))
         {
-            ValidationMessages = new string[] { errorMessage };
-
             DetermineIfValidationLevelIsInternal(errorCode);
         }
 
         public ValidationError(string errorCode, string messageHeader, string errorMessage, bool isInternal)
             : base(errorCode, string.Concat(messageHeader, Environment.NewLine, errorMessage, isInternal))
         {
-            ValidationMessages = new string[] { errorMessage };
         }
-
-        /// <summary>
-        /// Validation Error constructor that has a message before listing out all validation error messages.
-        /// </summary>
-        /// <param name="messageHeader">String to display in message before errors. Note that a new line is inserted at the end.</param>
-        /// <param name="validationErrorMessages">Messages to display for each validation error seperated by new lines.</param>
-        public ValidationError(string errorCode, string messageHeader, string[] validationErrorMessages) 
-            : base(errorCode,
-                   string.Concat(messageHeader, Environment.NewLine, string.Join(Environment.NewLine, validationErrorMessages)))
-        {
-            ValidationMessages = validationErrorMessages;
-        }
-
-        public ValidationError(string errorCode, string messageHeader, string[] validationErrorMessages, bool isInternal)
-            : base(errorCode,
-                   string.Concat(messageHeader, Environment.NewLine, string.Join(Environment.NewLine, validationErrorMessages)),
-                   isInternal)
-        {
-            ValidationMessages = validationErrorMessages;
-
-            DetermineIfValidationLevelIsInternal(errorCode);
-        }
-
-        /// <summary>
-        /// Validation Error constructor that lists out all validation error messages.
-        /// </summary>
-        /// <param name="validationErrorMessages">Messages to display for each validation error seperated by new lines.</param>
-        public ValidationError(string errorCode, string[] validationErrorMessages) 
-            : base(errorCode, string.Join(Environment.NewLine, validationErrorMessages))
-        {
-            ValidationMessages = validationErrorMessages;
-
-            DetermineIfValidationLevelIsInternal(errorCode);
-        }
-
-        public ValidationError(LibraryValidatorType validationLevel, string[] validationErrorMessages, bool isInternal)
-            : base(validationLevel.ToString(), string.Join(Environment.NewLine, validationErrorMessages), isInternal)
-        {
-            ValidationMessages = validationErrorMessages;
-        }
-
-        #endregion Constructors
-
-        /// <summary>
-        /// Gets all validation error messages.
-        /// </summary>
-        public string[] ValidationMessages { get; init; }
 
         [JsonIgnore]
         public LibraryValidatorType ValidationErrorLevel { get; init; }

@@ -21,6 +21,8 @@ namespace Domain.CustomFluentValidation
 
         Configuration = 50,
 
+        Request = 60,
+
         // Mixed means that a validator could have various levels and the error code will be
         // set at the validation result level.
         Mixed = 98,
@@ -36,18 +38,20 @@ namespace Domain.CustomFluentValidation
         public const string ExternalCommunicationErrorCode = $"{ValidationCodeRoot}.ExternalCommunication";
         public const string IOErrorCode = $"{ValidationCodeRoot}.IO";
         public const string ConfigurationErrorCode = $"{ValidationCodeRoot}.Configuration";
+        public const string RequestErrorCode = $"{ValidationCodeRoot}.Request";
         public const string UnknownErrorCode = $"{ValidationCodeRoot}.Unknown";
 
-        private static KeyValuePair<LibraryValidatorType, string>[] libraryValidatorLevelToString = new[]
+        private static readonly KeyValuePair<LibraryValidatorType, string>[] libraryValidatorLevelToString = new[]
         {
             new KeyValuePair<LibraryValidatorType, string>(LibraryValidatorType.Entity, EntityErrorCode),
             new KeyValuePair<LibraryValidatorType, string>(LibraryValidatorType.Database, DatabaseErrorCode),
             new KeyValuePair<LibraryValidatorType, string>(LibraryValidatorType.ExternalCommunication, ExternalCommunicationErrorCode),
             new KeyValuePair<LibraryValidatorType, string>(LibraryValidatorType.IO, IOErrorCode),
+            new KeyValuePair<LibraryValidatorType, string>(LibraryValidatorType.Request, RequestErrorCode),
             new KeyValuePair<LibraryValidatorType, string>(LibraryValidatorType.Unknown, UnknownErrorCode),
         };
 
-        public static BidirectionalDictionary<LibraryValidatorType, string> ValidatorAndStringBidirectionalDict = new(libraryValidatorLevelToString);
+        public static readonly BidirectionalDictionary<LibraryValidatorType, string> ValidatorAndStringBidirectionalDict = new(libraryValidatorLevelToString);
         
         /// <summary>
         /// Constructs a valid Library Validation Error Code
@@ -85,16 +89,23 @@ namespace Domain.CustomFluentValidation
                 errorCode = "NonSpecific";    
             }
 
-            return validationType switch
+            if (ValidatorAndStringBidirectionalDict.TryGetByFirstKey(validationType, out string standardCode))
             {
-                LibraryValidatorType.None => errorCode,
-                LibraryValidatorType.Entity => $"{EntityErrorCode}.{errorCode}",
-                LibraryValidatorType.Database => $"{DatabaseErrorCode}.{errorCode}",
-                LibraryValidatorType.ExternalCommunication => $"{ExternalCommunicationErrorCode}.{errorCode}",
-                LibraryValidatorType.IO => $"{IOErrorCode}.{errorCode}",
-                LibraryValidatorType.Configuration => $"{ConfigurationErrorCode}.{errorCode}",
-                _ => $"{UnknownErrorCode}.{errorCode}",
-            };
+                return $"{standardCode}.{errorCode}";
+            }
+
+            return $"{UnknownErrorCode}.{errorCode}";
+
+            //return validationType switch
+            //{
+            //    LibraryValidatorType.None => errorCode,
+            //    LibraryValidatorType.Entity => $"{EntityErrorCode}.{errorCode}",
+            //    LibraryValidatorType.Database => $"{DatabaseErrorCode}.{errorCode}",
+            //    LibraryValidatorType.ExternalCommunication => $"{ExternalCommunicationErrorCode}.{errorCode}",
+            //    LibraryValidatorType.IO => $"{IOErrorCode}.{errorCode}",
+            //    LibraryValidatorType.Configuration => $"{ConfigurationErrorCode}.{errorCode}",
+            //    _ => $"{UnknownErrorCode}.{errorCode}",
+            //};
         }
 
         public static LibraryValidatorType ValidationLevelFromCode(string code)

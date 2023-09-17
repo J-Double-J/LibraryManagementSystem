@@ -1,50 +1,28 @@
-﻿using Application.Interfaces.Configuration;
-using Domain.Abstract;
-using Domain.CustomFluentValidation;
+﻿using Domain.CustomFluentValidation;
 using Domain.Entities;
-using Domain.Errors;
 using FluentValidation;
-using FluentValidation.Results;
 
 namespace Application.CQRS.BookCQRS.Commands.CreateBook
 {
     public class CreateBookCommandValidator : LibraryValidator<CreateBookCommand>
     {
-        private readonly IBookRepository _bookRepository;
-        private readonly ILibraryManagementConfiguration _configuration;
-        
-        public CreateBookCommandValidator(IBookRepository bookRepository, ILibraryManagementConfiguration configuration)
-            : base(LibraryValidatorType.Database)
+        public CreateBookCommandValidator()
+            : base(LibraryValidatorType.Request)
         {
-            _bookRepository = bookRepository;
-            _configuration = configuration;
+            // These rules are copied from Book Validator because at the moment its just a 1:1 map.
+            RuleFor(book => book.Author).NotEmpty();
 
-            RuleFor(command => command).CustomAsync(BeABookThatWillBeTakenIntoSystem);
-        }
+            RuleFor(book => book.Title).NotEmpty().MaximumLength(Book.MAX_LENGTH_TITLE);
 
-        private async Task BeABookThatWillBeTakenIntoSystem(CreateBookCommand command,
-                                                            ValidationContext<CreateBookCommand> context,
-                                                            CancellationToken cancellationToken)
-        {
-            Result<IEnumerable<Book>> result = await _bookRepository.GetBooksByTitle(command.Title);
+            RuleFor(book => book.Description).NotEmpty();
 
-            if (result.IsFailure)
-            {
-                context.AddFailure(DatabaseValidationErrorName.DATABASE_ERROR, $"Failed to validate book: {result.Error!.Message}");
-            }
+            RuleFor(book => book.Pages).GreaterThan(0);
 
-            IEnumerable<Book> booksWithSameAuthorAndTitle = result.Value.Where(book => book.Author == command.Author);
+            RuleFor(book => book.DatePublished).NotEmpty();
 
-            if (booksWithSameAuthorAndTitle.Count() >= _configuration.MaximumNumberOfCopiesOfBook)
-            {
-                context.AddFailure(new ValidationFailure(
-                        nameof(command.Title),
-                        $"Library already has {_configuration.MaximumNumberOfCopiesOfBook} copies of this book and will not be able to accept another.")
-                        {
-                            ErrorCode = LibraryValidationErrorCodeHelper.ConstructErrorCode(LibraryValidatorType.Entity, DomainErrors.BookErrorCodes.MaximumCopiesOfBookHeldAlready)
-                        }
-                    );
-            }
+            RuleFor(book => book.Publisher).MaximumLength(Book.MAX_LENGTH_PUBLISHER);
+
+            RuleFor(book => book.DateRecieved).NotEmpty().LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow));
         }
     }
 }

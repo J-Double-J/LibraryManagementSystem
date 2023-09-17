@@ -1,4 +1,5 @@
 ﻿using Domain.Abstract;
+using Domain.CustomFluentValidation;
 using Domain.Entities;
 
 namespace Application.CQRS.BookCQRS.Commands
@@ -53,6 +54,13 @@ namespace Application.CQRS.BookCQRS.Commands
                 if(bookResult.IsSuccess)
                 {
                     await _repository.AddBook(bookResult.Value);
+                }
+
+                // This will mask the 
+                if (bookResult is DomainValidationResult<Book> domainResult)
+                {
+                    domainResult.HighLevelErrorCode = LibraryValidationErrorCodeHelper.ConstructErrorCode(LibraryValidatorType.Entity, "BookCreation");
+                    return domainResult;
                 }
 
                 return bookResult;

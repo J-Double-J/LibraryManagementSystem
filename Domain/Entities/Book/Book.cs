@@ -78,14 +78,9 @@ namespace Domain.Entities
 
             BookValidator bookValidator = new();
 
-            DomainValidationResult validationResult = await bookValidator.ValidateAsyncGetDomainResult(book);
+            DomainValidationResult<Book> validationResult = await bookValidator.ValidateAsyncGetDomainResult(book);
 
-            if (validationResult.IsFailure)
-            {
-                return Result.Failure<Book>(null, new("Book.CreateValidationError", validationResult.FlattenedErrorMessage));
-            }
-
-            return book;
+            return validationResult;
         }
     }
 }

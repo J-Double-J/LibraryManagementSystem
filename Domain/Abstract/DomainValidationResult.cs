@@ -1,9 +1,12 @@
-﻿using System.Text;
+﻿using Newtonsoft.Json;
+using System.Text;
 
 namespace Domain.Abstract
 {
     public class DomainValidationResult : Result, IValidationResult
     {
+        private string? _highLevelErrorCode;
+
         private DomainValidationResult(ValidationError[] errors) : base(false, IValidationResult.ValidationError)
         {
             ValidationErrors = errors;
@@ -20,29 +23,36 @@ namespace Domain.Abstract
             ValidationErrors = Array.Empty<ValidationError>(); 
         }
 
-        public ValidationError[] ValidationErrors { get; }
-
-        public string FlattenedErrorMessage {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string? HighLevelErrorCode
+        {
             get
             {
-                if (ValidationErrors.Length == 0)
+                if (!string.IsNullOrEmpty(_highLevelErrorCode))
                 {
-                    throw new InvalidOperationException("There are no error messages to flatten");
+                    return _highLevelErrorCode;
                 }
 
-                StringBuilder sb = new StringBuilder();
-
-                foreach (var error in ValidationErrors)
+                if (ValidationErrors.Length > 0)
                 {
-                    foreach (string message in error.ValidationMessages)
-                    {
-                        sb.AppendLine(message);
-                    }
+                    return ValidationErrors[0];
                 }
 
-                return sb.ToString();
+                return null;
+            }
+
+            set
+            {
+                if (value is null)
+                {
+                    throw new InvalidOperationException("Cannot set HighLevelErrorCode to null");
+                }
+
+                _highLevelErrorCode = value;
             }
         }
+
+        public ValidationError[] ValidationErrors { get; }
 
         public static new DomainValidationResult Success() { return SuccessfulValidation(); }
 

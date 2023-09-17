@@ -26,9 +26,21 @@ namespace Application.Behaviors
 
             try
             {
-                var validationFailures = await Task.WhenAll(_validators.Select(validator => (validator as LibraryValidator<TRequest>)!.ValidateAsync(context)));
 
-                ValidationError[] errors = validationFailures
+                // Validate with the 'fast' validators first.
+                var libraryValidationResult = await Task.WhenAll(_validators.OfType<LibraryValidator<TRequest>>()
+                                                   .Where(validator => !validator.IsSlowValidator)
+                                                   .Select(validator => validator.ValidateAsync(context)));
+
+                // Validate with 'slow' validators if there were no validation errors with fast validators.
+                if (libraryValidationResult.All(result => result.IsValid == true))
+                {
+                    libraryValidationResult = await Task.WhenAll(_validators.OfType<LibraryValidator<TRequest>>()
+                                                   .Where(validator => validator.IsSlowValidator)
+                                                   .Select(validator => validator.ValidateAsync(context)));
+                }
+
+                ValidationError[] errors = libraryValidationResult
                     .Where(ValidationResult => !ValidationResult.IsValid)
                     .SelectMany(validationResult => validationResult.Errors)
                     .Select(failure => { _logger.LogInformation("Error code : {@error}", failure.ErrorCode); return failure; })
@@ -56,10 +68,10 @@ namespace Application.Behaviors
         {
             if (typeof(TResult) == typeof(Result))
             {
-                return (ValidationResult<TResult>.WithErrors(errors) as TResult)!;
+                return (DomainValidationResult<TResult>.WithErrors(errors) as TResult)!;
             }
 
-            object validationResult = typeof(ValidationResult<>)
+            object validationResult = typeof(DomainValidationResult<>)
                 .GetGenericTypeDefinition()
                 .MakeGenericType(typeof(TResult).GenericTypeArguments[0])
                 .GetMethod(nameof(Domain.Abstract.DomainValidationResult.WithErrors))!

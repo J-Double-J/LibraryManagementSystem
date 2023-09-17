@@ -32,6 +32,22 @@ namespace Domain.CustomFluentValidation
             return DomainValidationResult.WithErrors(errors);
         }
 
+        public static DomainValidationResult<TValue> ToDomainValidationResult<TValue>(this ValidationResult validationResult,
+                                                                                        TValue value,
+                                                                                        LibraryValidatorType type)
+        {
+            LibraryFluentValidationResult libFluentResult = validationResult.ToLibraryFluentValidationResult(type);
+
+            if (libFluentResult.IsValid)
+            {
+                return DomainValidationResult<TValue>.SuccessfulValidation(value);
+            }
+
+            ValidationError[] errors = MapValidationFailuresToValidationDomainErrors(libFluentResult);
+
+            return DomainValidationResult<TValue>.WithErrors(errors);
+        }
+
         private static List<ValidationFailure> PrefixErrorCodesToErrors(ValidationResult validationResult, LibraryValidatorType validatorLevel)
         {
             List<ValidationFailure> failures = validationResult.Errors;

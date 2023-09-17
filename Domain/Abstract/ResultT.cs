@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Abstract
+﻿namespace Domain.Abstract
 {
     public class Result<TValue> : Result
     {
@@ -22,5 +15,10 @@ namespace Domain.Abstract
             : throw new InvalidOperationException("The value of a failure result can not be accessed.");
 
         public static implicit operator Result<TValue>(TValue? value) => new(value, true, Error.None);
+
+        public bool ShouldSerializeValue()
+        {
+            return IsSuccess;
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Domain.Abstract
+﻿using Newtonsoft.Json;
+
+namespace Domain.Abstract
 {
     public class Result
     {
@@ -20,6 +22,7 @@
 
         public bool IsSuccess { get; private init; }
 
+        [JsonIgnore]
         public bool IsFailure => !IsSuccess;
 
         public Error? Error { get; }
