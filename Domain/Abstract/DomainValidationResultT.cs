@@ -1,14 +1,13 @@
-﻿using Domain.CustomFluentValidation;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Domain.Abstract
 {
     public class DomainValidationResult<TValue> : Result<TValue>, IValidationResult
     {
-        private string? _highLevelErrorCode;
+        private ErrorCode? _highLevelErrorCode;
 
         private DomainValidationResult(ValidationError[] errors)
-            : base(default, false, IValidationResult.ValidationError)
+            : base(default, false, IValidationResult.ValidationError(errors[0].Code.ErrorDomain, errors[0].Code.ErrorSpecification))
         {
             ValidationErrors = errors;
         }
@@ -20,10 +19,10 @@ namespace Domain.Abstract
         }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string? HighLevelErrorCode {
+        public ErrorCode? HighLevelErrorCode {
             get
             {
-                if (!string.IsNullOrEmpty(_highLevelErrorCode))
+                if (_highLevelErrorCode != null && _highLevelErrorCode != ErrorCode.None)
                 {
                     return _highLevelErrorCode;
                 }

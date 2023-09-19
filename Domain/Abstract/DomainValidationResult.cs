@@ -7,7 +7,8 @@ namespace Domain.Abstract
     {
         private string? _highLevelErrorCode;
 
-        private DomainValidationResult(ValidationError[] errors) : base(false, IValidationResult.ValidationError)
+        private DomainValidationResult(ValidationError[] errors)
+            : base(false, IValidationResult.ValidationError(errors[0].Code.ErrorDomain, errors[0].Code.ErrorSpecification))
         {
             ValidationErrors = errors;
         }

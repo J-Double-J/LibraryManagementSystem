@@ -59,7 +59,7 @@ namespace Application.CQRS.BookCQRS.Commands
                 // This will mask the 
                 if (bookResult is DomainValidationResult<Book> domainResult)
                 {
-                    domainResult.HighLevelErrorCode = LibraryValidationErrorCodeHelper.ConstructErrorCode(LibraryValidatorType.Entity, "BookCreation");
+                    domainResult.HighLevelErrorCode = ValidationErrorCodeFactory.ConstructErrorCode(LibraryValidatorType.Entity, "BookCreation");
                     return domainResult;
                 }
 

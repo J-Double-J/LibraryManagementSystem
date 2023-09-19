@@ -4,31 +4,30 @@ namespace Domain.Abstract
 {
     public class Error : IEquatable<Error>
     {
-        public static readonly Error None = new(string.Empty, string.Empty);
-        public static readonly Error NullValue = new("Error.NullValue", "The specified result value is null.");
+        public static readonly Error None = new(ErrorCode.None, string.Empty);
 
-        public Error(string code, string message)
+        public Error(ErrorCode code, string message)
         {
             Code = code;
             Message = message;
             IsInternalError = false;
         } 
 
-        public Error(string code, string message, bool isInternalError)
+        public Error(ErrorCode code, string message, bool isInternalError)
         {
             Code = code;
             Message = message;
             IsInternalError = isInternalError;
         }
 
-        public string Code { get; protected set; }
+        public ErrorCode Code { get; protected set; }
 
         public string Message { get; protected set; }
 
         [JsonIgnore]
         public bool IsInternalError { get; protected set; }
 
-        public static implicit operator string(Error error) => error.Code;
+        public static implicit operator string(Error error) => error.Code.ToString();
 
         public static bool operator ==(Error? left, Error? right)
         {

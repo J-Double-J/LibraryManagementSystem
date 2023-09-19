@@ -14,14 +14,14 @@ namespace Domain.Abstract
         /// </summary>
         /// <param name="messageHeader">String to display in message before error. Note that a new line is inserted at the end.</param>
         /// <param name="errorMessage">Error message for validation.</param>
-        public ValidationError(string errorCode, string messageHeader, string errorMessage)
-            : base(errorCode, string.Concat(messageHeader, Environment.NewLine, errorMessage))
+        public ValidationError(ErrorCode errorCode, string errorMessage)
+            : base(errorCode, errorMessage)
         {
             DetermineIfValidationLevelIsInternal(errorCode);
         }
 
-        public ValidationError(string errorCode, string messageHeader, string errorMessage, bool isInternal)
-            : base(errorCode, string.Concat(messageHeader, Environment.NewLine, errorMessage, isInternal))
+        public ValidationError(ErrorCode errorCode, string errorMessage, bool isInternal)
+            : base(errorCode, errorMessage, isInternal)
         {
         }
 
@@ -34,9 +34,9 @@ namespace Domain.Abstract
         /// <param name="validationLevel">What level the error occurred at.</param>
         /// <exception cref="InvalidOperationException">Throws if a <see cref="LibraryValidatorType.Mixed"/> is passed in. Errors
         /// must </exception>
-        private void DetermineIfValidationLevelIsInternal(string errorCode)
+        private void DetermineIfValidationLevelIsInternal(ErrorCode errorCode)
         {
-            LibraryValidatorType validatorLevel = LibraryValidationErrorCodeHelper.ValidationLevelFromCode(errorCode);
+            LibraryValidatorType validatorLevel = ValidationErrorCodeFactory.ValidationLevelFromCode(errorCode);
 
             // Likely subject to change at some point as errors become more specific. These enums might be extracted to classes to have behavior.
             switch (validatorLevel)

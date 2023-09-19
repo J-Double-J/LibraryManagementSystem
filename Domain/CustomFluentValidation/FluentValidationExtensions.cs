@@ -54,7 +54,7 @@ namespace Domain.CustomFluentValidation
             
             foreach(var error in failures)
             {
-                error.ErrorCode = LibraryValidationErrorCodeHelper.PrefixErrorCodeIfNoPrefixAttached(validatorLevel, error.ErrorCode);
+                error.ErrorCode = ValidationErrorCodeFactory.PrefixErrorCodeIfNoPrefixAttached(validatorLevel, error.ErrorCode).ToString();
             }
 
             return failures;
@@ -67,10 +67,33 @@ namespace Domain.CustomFluentValidation
             for (int i = 0; i < libFluentResult.Errors.Count; i++)
             {
                 var error = libFluentResult.Errors[i];
-                errors[i] = new(error.ErrorCode, "Validation Failure:", error.ErrorMessage);
+
+                ErrorCode errorCode;
+                try
+                {
+                    errorCode = ErrorCode.ConstructFromStringRepresentation(error.ErrorCode);
+                }
+                catch
+                {
+                    errorCode = ConstructAlternativeCode(error.ErrorCode);
+                }
+
+                errors[i] = new(errorCode, error.ErrorMessage);
             }
 
             return errors;
+        }
+
+        private static ErrorCode ConstructAlternativeCode(string errorCode)
+        {
+            try
+            {
+                return ErrorCode.ConstructFromCombinedTypeDomain(errorCode, "UnSpecified");
+            }
+            catch
+            {
+                return ErrorCode.ConstructFromCombinedTypeDomain(ValidationErrorCodeFactory.UnknownErrorCode, "UnSpecified");
+            }
         }
     }
 }

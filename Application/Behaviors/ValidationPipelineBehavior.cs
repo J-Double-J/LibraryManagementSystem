@@ -44,7 +44,7 @@ namespace Application.Behaviors
                     .Where(ValidationResult => !ValidationResult.IsValid)
                     .SelectMany(validationResult => validationResult.Errors)
                     .Select(failure => { _logger.LogInformation("Error code : {@error}", failure.ErrorCode); return failure; })
-                    .Select(failure => new ValidationError(failure.ErrorCode, "Validation Failure for the following: ",
+                    .Select(failure => new ValidationError(ErrorCode.ConstructFromStringRepresentation(failure.ErrorCode),
                                                            $"`{failure.PropertyName}`: {failure.ErrorMessage}"))
                     .Distinct()
                     .ToArray();

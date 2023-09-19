@@ -41,7 +41,7 @@ namespace Application.CQRS.BookCQRS.Commands.CreateBook
                         nameof(command.Title),
                         $"Library already has {_configuration.MaximumNumberOfCopiesOfBook} copies of this book and will not be able to accept another.")
                         {
-                            ErrorCode = LibraryValidationErrorCodeHelper.ConstructErrorCode(LibraryValidatorType.Entity, DomainErrors.BookErrorCodes.MaximumCopiesOfBookHeldAlready)
+                            ErrorCode = ValidationErrorCodeFactory.ConstructErrorCode(LibraryValidatorType.Entity, DomainErrors.BookErrorCodes.MaximumCopiesOfBookHeldAlready).ToString()
                         }
                     );
             }

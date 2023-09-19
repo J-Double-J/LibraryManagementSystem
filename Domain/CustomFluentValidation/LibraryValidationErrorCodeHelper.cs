@@ -1,4 +1,5 @@
-﻿using Domain.Primitives;
+﻿using Domain.Abstract;
+using Domain.Primitives;
 using System.Text;
 
 namespace Domain.CustomFluentValidation
@@ -30,9 +31,9 @@ namespace Domain.CustomFluentValidation
         Unknown = 99
     }
 
-    public static class LibraryValidationErrorCodeHelper
+    public static class ValidationErrorCodeFactory
     {
-        private const string ValidationCodeRoot = "ValidationFailure";
+        public const string ValidationCodeRoot = "ValidationFailure";
         public const string EntityErrorCode = $"{ValidationCodeRoot}.Entity";
         public const string DatabaseErrorCode = $"{ValidationCodeRoot}.Database";
         public const string ExternalCommunicationErrorCode = $"{ValidationCodeRoot}.ExternalCommunication";
@@ -60,7 +61,7 @@ namespace Domain.CustomFluentValidation
         /// <param name="specifiedErrorCode">End of error code that specifies what exactly went wrong.</param>
         /// <returns>A constructed error code following Domain rules.</returns>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="specifiedErrorCode"/> is null.</exception>
-        public static string ConstructErrorCode(LibraryValidatorType validationType, string specifiedErrorCode)
+        public static ErrorCode ConstructErrorCode(LibraryValidatorType validationType, string specifiedErrorCode)
         {
             if (string.IsNullOrEmpty(specifiedErrorCode))
             {
@@ -77,11 +78,11 @@ namespace Domain.CustomFluentValidation
         /// <param name="validationType">LType of validation that failed.</param>
         /// <param name="errorCode">Error code to prefix</param>
         /// <returns>A constructed error code following Domain rules.</returns>
-        public static string PrefixErrorCodeIfNoPrefixAttached(LibraryValidatorType validationType, string errorCode)
+        public static ErrorCode PrefixErrorCodeIfNoPrefixAttached(LibraryValidatorType validationType, string errorCode)
         {
             if (!string.IsNullOrEmpty(errorCode) && errorCode.StartsWith(ValidationCodeRoot))
             {
-                return errorCode;
+                return ErrorCode.ConstructFromStringRepresentation(errorCode);
             }
 
             if (string.IsNullOrEmpty(errorCode))
@@ -91,39 +92,15 @@ namespace Domain.CustomFluentValidation
 
             if (ValidatorAndStringBidirectionalDict.TryGetByFirstKey(validationType, out string standardCode))
             {
-                return $"{standardCode}.{errorCode}";
+                return ErrorCode.ConstructFromCombinedTypeDomain(standardCode, errorCode);
             }
 
-            return $"{UnknownErrorCode}.{errorCode}";
-
-            //return validationType switch
-            //{
-            //    LibraryValidatorType.None => errorCode,
-            //    LibraryValidatorType.Entity => $"{EntityErrorCode}.{errorCode}",
-            //    LibraryValidatorType.Database => $"{DatabaseErrorCode}.{errorCode}",
-            //    LibraryValidatorType.ExternalCommunication => $"{ExternalCommunicationErrorCode}.{errorCode}",
-            //    LibraryValidatorType.IO => $"{IOErrorCode}.{errorCode}",
-            //    LibraryValidatorType.Configuration => $"{ConfigurationErrorCode}.{errorCode}",
-            //    _ => $"{UnknownErrorCode}.{errorCode}",
-            //};
+            return ErrorCode.ConstructFromCombinedTypeDomain(UnknownErrorCode, errorCode);
         }
 
-        public static LibraryValidatorType ValidationLevelFromCode(string code)
+        public static LibraryValidatorType ValidationLevelFromCode(ErrorCode code)
         {
-            if (string.IsNullOrEmpty(code))
-            {
-                throw new InvalidOperationException("Code must be non-empty to obtain ValidationLevel");
-            }
-
-            int firstIndexOfDot = code.IndexOf('.');
-            int lastIndexOfDot = code.LastIndexOf('.');
-
-            if (firstIndexOfDot == -1 || lastIndexOfDot == firstIndexOfDot)
-            {
-                throw new ArgumentException("Code must be given in the standard of errorType.MoreSpecific.MostSpecific");
-            }
-
-            string prefix = code[..lastIndexOfDot];
+            string prefix = $"{code.ErrorType}.{code.ErrorDomain}";
 
             if (ValidatorAndStringBidirectionalDict.TryGetBySecondKey(prefix, out var validationLevel))
             {
