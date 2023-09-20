@@ -74,7 +74,7 @@ namespace Application.Behaviors
             object validationResult = typeof(DomainValidationResult<>)
                 .GetGenericTypeDefinition()
                 .MakeGenericType(typeof(TResult).GenericTypeArguments[0])
-                .GetMethod(nameof(Domain.Abstract.DomainValidationResult.WithErrors))!
+                .GetMethod(nameof(DomainValidationResult.WithErrors))!
                 .Invoke(null, new object?[] { errors })!;
 
             return (TResult)validationResult;

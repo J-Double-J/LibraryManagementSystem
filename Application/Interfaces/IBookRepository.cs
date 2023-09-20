@@ -15,5 +15,6 @@ namespace Application
 
         Task<Result<IEnumerable<Book>>> GetBooksByTitle(string title);
 
+        Task<Result<Book>> UpdateBook(Guid guid, Book book);
     }
 }

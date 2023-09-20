@@ -33,37 +33,37 @@ namespace Domain.Entities
         /// <summary>
         /// Gets the Author of the book.
         /// </summary>
-        public string Author { get; init; }
+        public string Author { get; set; }
 
         /// <summary>
         /// Gets the title of the book.
         /// </summary>
-        public string Title { get; init; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Gets the description of the book.
         /// </summary>
-        public string Description { get; init; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets the number of pages in the book.
         /// </summary>
-        public int Pages { get; init; }
+        public int Pages { get; set; }
 
         /// <summary>
         /// Gets the date the book was published.
         /// </summary>
-        public DateOnly DatePublished { get; init; }
+        public DateOnly DatePublished { get; set; }
 
         /// <summary>
         /// Gets the publisher of the book.
         /// </summary>
-        public string Publisher { get; init; }
+        public string Publisher { get; set; }
 
         /// <summary>
         /// Gets the date the book was recieved into the system.`
         /// </summary>
-        public DateOnly DateRecieved { get; init; }
+        public DateOnly DateRecieved { get; set; }
 
         public static async Task<Result<Book>>  Create(
             string author,
@@ -81,6 +81,21 @@ namespace Domain.Entities
             DomainValidationResult<Book> validationResult = await bookValidator.ValidateAsyncGetDomainResult(book);
 
             return validationResult;
+        }
+
+        /// <summary>
+        /// Copies properties from one book to another.
+        /// </summary>
+        /// <param name="book">Book to copy properties to</param>
+        public void CopyTo(Book book)
+        {
+            book.Author = Author;
+            book.Title = Title;
+            book.Description = Description;
+            book.Pages = Pages;
+            book.DatePublished = DatePublished;
+            book.Publisher = Publisher;
+            book.DateRecieved = DateRecieved;
         }
     }
 }

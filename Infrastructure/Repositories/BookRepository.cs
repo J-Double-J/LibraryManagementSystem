@@ -98,5 +98,27 @@ namespace Infrastructure
                 return Result.Failure<Book>(null, new(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
             }
         }
+
+        public async Task<Result<Book>> UpdateBook(Guid guid, Book book)
+        {
+            try
+            {
+                Book? existingBook = await _context.Books.FirstOrDefaultAsync(book => book.Id == guid);
+
+                if (existingBook is not null)
+                {
+                    book.CopyTo(existingBook);
+                    await _context.SaveChanges();
+                    return existingBook;
+                }
+
+                return Result.Failure<Book>(null, new(InfrastructureErrors.BookRepositoryErrors.BOOK_ID_NOT_FOUND,
+                                                  $"No book with the ID `{guid}` was found."));
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure<Book>(null, new(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
+            }
+        }
     }
 }

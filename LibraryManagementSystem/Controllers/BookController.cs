@@ -6,6 +6,8 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Infrastructure.Errors;
+using Application.CQRS.BookCQRS.Commands.UpdateBook;
+using Domain.CustomFluentValidation;
 
 namespace Infrastructure
 {
@@ -46,7 +48,7 @@ namespace Infrastructure
             return BadRequest(result.Error);
         }
 
-        [HttpPost("Remove")]
+        [HttpPost("remove")]
         public async Task<IActionResult> RemoveBook([FromQuery] Guid guid)
         {
             Result result = await _mediator.Send(new RemoveBookCommand(guid));
@@ -77,6 +79,29 @@ namespace Infrastructure
             if (result.Error!.Code == InfrastructureErrors.BookRepositoryErrors.BOOK_ID_NOT_FOUND)
             {
                 return BadRequest(result);
+            }
+
+            return StatusCode(500, result.Error);
+        }
+
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateBook([FromBody] UpdateBookCommand command)
+        {
+            Result<Book> result = await _mediator.Send(command);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+
+            if (result.Error!.Code == InfrastructureErrors.BookRepositoryErrors.BOOK_ID_NOT_FOUND)
+            {
+                return BadRequest(result);
+            }
+
+            if (result is DomainValidationResult<Book> validationResult)
+            {
+                return BadRequest(validationResult.ValidationErrors);
             }
 
             return StatusCode(500, result.Error);
