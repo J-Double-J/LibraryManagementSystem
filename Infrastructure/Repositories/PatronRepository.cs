@@ -58,7 +58,28 @@ namespace Infrastructure.Repositories
             {
                 return Result.Failure<Patron>(null, new Error(InfrastructureErrors.PatronRepositoryErrors.PATRON_DB_ERROR, ex.Message));
             }
-            
+        }
+
+        public async Task<Result> DeletePatron(Guid id)
+        {
+            try
+            {
+                Patron? patron = await _context.Patrons.FirstOrDefaultAsync(p => p.Id == id);
+
+                if (patron is null)
+                {
+                    return Result.Failure<Patron>(null, new Error(InfrastructureErrors.PatronRepositoryErrors.PATRON_ID_NOT_FOUND, $"Patron with ID `{id}` not found."));
+                }
+
+                _context.Patrons.Remove(patron);
+                await _context.SaveChanges();
+
+                return Result.Success();
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure<Patron>(null, new Error(InfrastructureErrors.PatronRepositoryErrors.PATRON_DB_ERROR, ex.Message));
+            }
         }
     }
 }

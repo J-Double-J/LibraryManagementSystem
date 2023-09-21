@@ -1,4 +1,5 @@
 ﻿using Application.CQRS.BookCQRS.Commands.AddPatron;
+using Application.CQRS.BookCQRS.Commands.DeletePatron;
 using Application.CQRS.BookCQRS.Queries;
 using Domain.Abstract;
 using Domain.Entities;
@@ -59,6 +60,24 @@ namespace LibraryManagementSystem.Controllers
             if (result.IsSuccess)
             {
                 return Ok(result.Value);
+            }
+
+            if(result.Error!.Code == InfrastructureErrors.PatronRepositoryErrors.PATRON_ID_NOT_FOUND)
+            {
+                return NotFound(result.Error);
+            }
+
+            return StatusCode(500, result.Error!);
+        }
+
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeletePatronByID([FromQuery] Guid patronGuid)
+        {
+            Result result = await _mediator.Send(new DeletePatronCommand(patronGuid));
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
             }
 
             if(result.Error!.Code == InfrastructureErrors.PatronRepositoryErrors.PATRON_ID_NOT_FOUND)
