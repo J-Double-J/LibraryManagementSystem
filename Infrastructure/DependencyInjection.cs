@@ -1,6 +1,7 @@
 ﻿using Application;
 using Application.Interfaces.Configuration;
 using Infrastructure.Configuration;
+using Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure
@@ -10,6 +11,7 @@ namespace Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IPatronRepository, PatronRepository>();
 
             services.AddSingleton<ILibraryManagementConfiguration, LibraryManagementConfiguration>();
 

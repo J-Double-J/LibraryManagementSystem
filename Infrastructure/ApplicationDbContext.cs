@@ -1,5 +1,6 @@
 ﻿using Application;
 using Domain.Entities;
+using Domain.Entities.Patron;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure
@@ -9,6 +10,8 @@ namespace Infrastructure
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<Book> Books { get; set; }
+
+        public DbSet<Patron> Patrons { get; set; }
 
         public new async Task<int> SaveChanges()
         {

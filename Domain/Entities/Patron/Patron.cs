@@ -9,8 +9,8 @@ namespace Domain.Entities.Patron
         public static int MINIMUM_AGE = 4;
         private const int ADULT_AGE_CUTOFF = 18;
 
-        private Patron(Guid guid, string firstName, string lastName, int age)
-            : base(guid)
+        private Patron(Guid id, string firstName, string lastName, int age)
+            : base(id)
         {
             FirstName = firstName;
             LastName = lastName;
