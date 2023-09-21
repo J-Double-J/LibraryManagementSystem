@@ -3,6 +3,7 @@ using Application.CQRS.BookCQRS.Queries;
 using Domain.Abstract;
 using Domain.Entities;
 using Domain.Entities.Patron;
+using Infrastructure.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,6 +46,24 @@ namespace LibraryManagementSystem.Controllers
             if(result.IsSuccess)
             {
                 return Ok(result.Value);
+            }
+
+            return StatusCode(500, result.Error!);
+        }
+
+        [HttpGet("{patronGuid}")]
+        public async Task<IActionResult> GetPatronByID(Guid patronGuid)
+        {
+            Result<Patron> result = await _mediator.Send(new GetPatronByIDQuery(patronGuid));
+
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+
+            if(result.Error!.Code == InfrastructureErrors.PatronRepositoryErrors.PATRON_ID_NOT_FOUND)
+            {
+                return NotFound(result.Error);
             }
 
             return StatusCode(500, result.Error!);

@@ -12,5 +12,11 @@ namespace Infrastructure.Errors
             public static readonly ErrorCode BOOK_ID_NOT_FOUND = new("Database", "BookRepository", "IDNotFound");
             public static readonly ErrorCode BOOK_DB_ERROR = new("Database", "BookRepository", "DbError");
         }
+
+        public static class PatronRepositoryErrors
+        {
+            public static readonly ErrorCode PATRON_ID_NOT_FOUND = new("Database", "PatronRepository", "IDNotFound");
+            public static readonly ErrorCode PATRON_DB_ERROR = new("Database", "PatronRepository", "DbError");
+        }
     }
 }

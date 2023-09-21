@@ -8,5 +8,7 @@ namespace Application
         Task<Result<Patron>> AddPatron(Patron patron);
 
         Task<Result<IEnumerable<Patron>>> GetAllPatrons();
+
+        Task<Result<Patron>> GetPatronByID(Guid id);
     }
 }

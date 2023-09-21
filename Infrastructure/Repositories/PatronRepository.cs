@@ -23,7 +23,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                return Result.Failure<Patron>(null, new Error(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
+                return Result.Failure<Patron>(null, new Error(InfrastructureErrors.PatronRepositoryErrors.PATRON_DB_ERROR, ex.Message));
             }
 
             return Result.Success(patron);
@@ -37,8 +37,28 @@ namespace Infrastructure.Repositories
             }
             catch(Exception ex)
             {
-                return Result.Failure(Enumerable.Empty<Patron>(), new Error(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
+                return Result.Failure(Enumerable.Empty<Patron>(), new Error(InfrastructureErrors.PatronRepositoryErrors.PATRON_DB_ERROR, ex.Message));
             }
+        }
+
+        public async Task<Result<Patron>> GetPatronByID(Guid id)
+        {
+            try
+            {
+                Patron? patron = _context.Patrons.FirstOrDefault(p => p.Id == id);
+
+                if (patron is null)
+                {
+                    return Result.Failure<Patron>(null, new Error(InfrastructureErrors.PatronRepositoryErrors.PATRON_ID_NOT_FOUND, $"Patron with ID `{id}` not found."));
+                }
+
+                return patron!;
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure<Patron>(null, new Error(InfrastructureErrors.PatronRepositoryErrors.PATRON_DB_ERROR, ex.Message));
+            }
+            
         }
     }
 }
