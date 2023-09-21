@@ -1,4 +1,5 @@
 ﻿using Application.CQRS.BookCQRS.Commands.AddPatron;
+using Application.CQRS.BookCQRS.Queries;
 using Domain.Abstract;
 using Domain.Entities;
 using Domain.Entities.Patron;
@@ -31,6 +32,19 @@ namespace LibraryManagementSystem.Controllers
             if (result is DomainValidationResult<Patron> validationResult && validationResult.IsFailure)
             {
                 return BadRequest(validationResult.ValidationErrors);
+            }
+
+            return StatusCode(500, result.Error!);
+        }
+
+        [HttpGet("patrons")]
+        public async Task<IActionResult> GetAllPatrons()
+        {
+            Result<IEnumerable<Patron>> result = await _mediator.Send(new GetAllPatronsCommand());
+
+            if(result.IsSuccess)
+            {
+                return Ok(result.Value);
             }
 
             return StatusCode(500, result.Error!);

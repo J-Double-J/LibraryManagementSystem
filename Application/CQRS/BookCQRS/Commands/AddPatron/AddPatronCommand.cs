@@ -34,7 +34,7 @@ namespace Application.CQRS.BookCQRS.Commands.AddPatron
                     return patronResult;
                 }
 
-                return _patronRepository.AddPatron(patronResult.Value);
+                return await _patronRepository.AddPatron(patronResult.Value);
             }
         }
     }

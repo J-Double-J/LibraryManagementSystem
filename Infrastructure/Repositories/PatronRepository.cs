@@ -2,6 +2,7 @@
 using Domain.Abstract;
 using Domain.Entities.Patron;
 using Infrastructure.Errors;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -13,11 +14,12 @@ namespace Infrastructure.Repositories
             _context = applicationDbContext;
         }
 
-        public Result<Patron> AddPatron(Patron patron)
+        public async Task<Result<Patron>> AddPatron(Patron patron)
         {
             try
             {
                 _context.Patrons.Add(patron);
+                await _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -25,6 +27,18 @@ namespace Infrastructure.Repositories
             }
 
             return Result.Success(patron);
+        }
+
+        public async Task<Result<IEnumerable<Patron>>> GetAllPatrons()
+        {
+            try
+            {
+                return await _context.Patrons.ToArrayAsync();
+            }
+            catch(Exception ex)
+            {
+                return Result.Failure(Enumerable.Empty<Patron>(), new Error(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
+            }
         }
     }
 }

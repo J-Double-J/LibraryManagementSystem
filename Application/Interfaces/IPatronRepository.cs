@@ -5,6 +5,8 @@ namespace Application
 {
     public interface IPatronRepository
     {
-        Result<Patron> AddPatron(Patron patron);
+        Task<Result<Patron>> AddPatron(Patron patron);
+
+        Task<Result<IEnumerable<Patron>>> GetAllPatrons();
     }
 }
