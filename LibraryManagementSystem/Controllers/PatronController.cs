@@ -41,7 +41,7 @@ namespace LibraryManagementSystem.Controllers
         [HttpGet("patrons")]
         public async Task<IActionResult> GetAllPatrons()
         {
-            Result<IEnumerable<Patron>> result = await _mediator.Send(new GetAllPatronsCommand());
+            Result<IEnumerable<Patron>> result = await _mediator.Send(new GetAllPatronsQuery());
 
             if(result.IsSuccess)
             {

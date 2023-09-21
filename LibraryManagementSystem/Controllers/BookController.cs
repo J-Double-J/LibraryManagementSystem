@@ -7,7 +7,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Infrastructure.Errors;
 using Application.CQRS.BookCQRS.Commands.UpdateBook;
-using Domain.CustomFluentValidation;
 
 namespace Infrastructure
 {
