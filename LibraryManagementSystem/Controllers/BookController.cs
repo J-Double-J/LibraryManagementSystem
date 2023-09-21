@@ -47,7 +47,7 @@ namespace Infrastructure
             return BadRequest(result.Error);
         }
 
-        [HttpPost("remove")]
+        [HttpDelete("remove")]
         public async Task<IActionResult> RemoveBook([FromQuery] Guid guid)
         {
             Result result = await _mediator.Send(new RemoveBookCommand(guid));
