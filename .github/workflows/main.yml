@@ -29,7 +29,7 @@ jobs:
         run: dotnet build ./LibraryManagementSystem.sln --configuration Release --no-restore
 
       - name: Test and Generate Code Coverage
-        run: dotnet test ./LibraryManagementSystem.sln --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+        run: dotnet test ./UnitTests/UnitTests.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
 
       - name: Publish
         run: dotnet publish ./LibraryManagementSystem.sln --configuration Release --no-build --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
