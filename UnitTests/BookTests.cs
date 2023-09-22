@@ -120,12 +120,23 @@ namespace UnitTests
         {
             DateTime today = DateTime.UtcNow;
             DateOnly tomorrow = DateOnly.FromDateTime(today.AddDays(1));
-            DateOnly yesterday = DateOnly.FromDateTime(today.AddDays(-1));
 
             Result<Book> bookResult = await Book.Create("Author", "Title", "Description", 1, tomorrow, "Publisher", tomorrow);
 
             bookResult.Should().BeOfType<DomainValidationResult<Book>>()
                 .Which.ValidationErrors.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async void CompletelyInvalidBook_ReturnsAllValidationErrors()
+        {
+            DateTime today = DateTime.UtcNow;
+            DateOnly tomorrow = DateOnly.FromDateTime(today.AddDays(1));
+
+            Result<Book> bookResult = await Book.Create("", "", "", -1, tomorrow, "", tomorrow);
+
+            bookResult.Should().BeOfType<DomainValidationResult<Book>>()
+                .Which.ValidationErrors.Should().HaveCount(7);
         }
     }
 }
