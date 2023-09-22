@@ -15,11 +15,11 @@ namespace Domain.Entities
 
             RuleFor(book => book.Pages).GreaterThan(0);
 
-            RuleFor(book => book.DatePublished).NotEmpty();
+            RuleFor(book => book.DatePublished).NotEqual(DateOnly.MinValue).LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow));
 
-            RuleFor(book => book.Publisher).MaximumLength(Book.MAX_LENGTH_PUBLISHER);
+            RuleFor(book => book.Publisher).NotEmpty().MaximumLength(Book.MAX_LENGTH_PUBLISHER);
 
-            RuleFor(book => book.DateRecieved).NotEmpty().LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow));
+            RuleFor(book => book.DateRecieved).NotEqual(DateOnly.MinValue).LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow));
         }
     }
 }

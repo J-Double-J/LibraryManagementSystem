@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagementSystem", "LibraryManagementSystem\LibraryManagementSystem.csproj", "{6FEBEBED-665B-4FCE-B5B9-C3B455C07080}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryManagementSystem", "LibraryManagementSystem\LibraryManagementSystem.csproj", "{6FEBEBED-665B-4FCE-B5B9-C3B455C07080}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5BB2AD70-0087-458F-9E30-BD62E0AE6825}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{C8B3FA73-858F-4146-B24B-2D0A61680792}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{C8B3FA73-858F-4146-B24B-2D0A61680792}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{AD3A2461-0F06-4BEC-B350-B01526D5592A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{AD3A2461-0F06-4BEC-B350-B01526D5592A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{5C4E623C-A1A5-4D0E-AF95-EDF05E75C6D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{5C4E623C-A1A5-4D0E-AF95-EDF05E75C6D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{B804AF08-E02A-4AF2-B073-66010B43539A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation", "Presentation\Presentation.csproj", "{B804AF08-E02A-4AF2-B073-66010B43539A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -129,6 +131,26 @@ Global
 		{B804AF08-E02A-4AF2-B073-66010B43539A}.Release|x64.Build.0 = Release|Any CPU
 		{B804AF08-E02A-4AF2-B073-66010B43539A}.Release|x86.ActiveCfg = Release|Any CPU
 		{B804AF08-E02A-4AF2-B073-66010B43539A}.Release|x86.Build.0 = Release|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Debug|ARM.Build.0 = Debug|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Debug|x64.Build.0 = Debug|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Debug|x86.Build.0 = Debug|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Release|ARM.ActiveCfg = Release|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Release|ARM.Build.0 = Release|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Release|ARM64.Build.0 = Release|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Release|x64.ActiveCfg = Release|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Release|x64.Build.0 = Release|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Release|x86.ActiveCfg = Release|Any CPU
+		{255A4A72-DF0E-4A6E-9F88-DEA333ED83B6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
