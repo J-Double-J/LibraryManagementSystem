@@ -138,5 +138,16 @@ namespace UnitTests
             bookResult.Should().BeOfType<DomainValidationResult<Book>>()
                 .Which.ValidationErrors.Should().HaveCount(7);
         }
+
+        [Fact]
+        public async void BookCanBeConstructedCorrectly()
+        {
+            DateOnly yesterday = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
+
+            Result<Book> bookResult = await Book.Create("Author", "Title", "Description", 10, yesterday, "publisher", yesterday);
+
+            bookResult.IsSuccess.Should().BeTrue();
+            bookResult.Value.GetType().Should().Be(typeof(Book));
+        }
     }
 }

@@ -6,8 +6,9 @@ namespace Domain.Entities.Patron
 {
     public class Patron : Entity
     {
-        public static int MINIMUM_AGE = 4;
-        private const int ADULT_AGE_CUTOFF = 18;
+        public const int PATRON_NAME_MAXLENGTH = 50;
+        public const int MINIMUM_AGE = 4;
+        public const int ADULT_AGE_CUTOFF = 18;
 
         private Patron(Guid id, string firstName, string lastName, int age)
             : base(id)
