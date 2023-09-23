@@ -1,4 +1,5 @@
 ﻿using Domain.CustomFluentValidation;
+using Domain.Entities;
 using FluentValidation;
 
 namespace Application.CQRS.BookCQRS.Commands.UpdateBook
@@ -12,18 +13,18 @@ namespace Application.CQRS.BookCQRS.Commands.UpdateBook
 
             RuleFor(command => command.Author).NotEmpty().When(command => command.Author != null);
 
-            RuleFor(command => command.Title).NotEmpty().When(command => command.Title != null);
+            RuleFor(command => command.Title).NotEmpty().MaximumLength(Book.MAX_LENGTH_TITLE).When(command => command.Title != null);
 
             RuleFor(command => command.Description).NotEmpty().When(command => command.Description != null);
 
-            RuleFor(command => command.Pages).GreaterThan(0);
+            RuleFor(command => command.Pages).GreaterThan(0).When(command => command.Pages != null);
 
             RuleFor(command => command.DatePublished).Must(BeAValidDateIfNotNull);
 
-            RuleFor(command => command.Publisher).NotEmpty().When(command => command.Publisher != null);
+            RuleFor(command => command.Publisher).NotEmpty().MaximumLength(Book.MAX_LENGTH_PUBLISHER).When(command => command.Publisher != null);
         }
 
-        private bool BeAValidDateIfNotNull(DateOnly dateOnly)
+        private bool BeAValidDateIfNotNull(DateOnly? dateOnly)
         {
             // We treat min value as null
             if (dateOnly == DateOnly.MinValue)

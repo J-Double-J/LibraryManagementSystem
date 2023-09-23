@@ -10,19 +10,17 @@ namespace Application.CQRS.BookCQRS.Commands.UpdateBook
         public string? Title { get; set; }
         public string? Description { get; set; }
         public int? Pages { get; set; }
-
-        // Can be null
-        public DateOnly DatePublished { get; set; }
+        public DateOnly? DatePublished { get; set; }
         public string? Publisher { get; set; }
 
         public UpdateBookCommand(
             Guid guid,
-            string author,
-            string title,
-            string description,
-            int pages,
-            DateOnly datePublished,
-            string publisher
+            string? author,
+            string? title,
+            string? description,
+            int? pages,
+            DateOnly? datePublished,
+            string? publisher
             )
         {
             Author = author;
@@ -56,7 +54,7 @@ namespace Application.CQRS.BookCQRS.Commands.UpdateBook
                                                          request.Title ?? curBook.Title,
                                                          request.Description ?? curBook.Description,
                                                          request.Pages ?? curBook.Pages,
-                                                         request.DatePublished != DateOnly.MinValue ? request.DatePublished : curBook.DatePublished,
+                                                         request.DatePublished ?? curBook.DatePublished,
                                                          request.Publisher ?? curBook.Publisher,
                                                          curBook.DateRecieved);
 
