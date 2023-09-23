@@ -53,16 +53,23 @@ namespace Application.CQRS.BookCQRS.Commands
 
                 if(bookResult.IsSuccess)
                 {
-                    await _repository.AddBook(bookResult.Value);
+                    Result dbResult = await _repository.AddBook(bookResult.Value);
+
+                    if (dbResult.IsSuccess)
+                    {
+                        return bookResult;
+                    }
+
+                    return Result.Failure<Book>(null, dbResult.Error!);
                 }
 
-                // This will mask the 
                 if (bookResult is DomainValidationResult<Book> domainResult)
                 {
                     domainResult.HighLevelErrorCode = ValidationErrorCodeFactory.ConstructErrorCode(LibraryValidatorType.Entity, "BookCreation");
                     return domainResult;
                 }
-
+                
+                // Shouldn't be reached.
                 return bookResult;
             }
         }
