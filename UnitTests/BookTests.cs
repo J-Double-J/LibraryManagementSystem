@@ -149,5 +149,25 @@ namespace UnitTests
             bookResult.IsSuccess.Should().BeTrue();
             bookResult.Value.GetType().Should().Be(typeof(Book));
         }
+
+        [Fact]
+        public async void CopyToBookCopiesCorrectly()
+        {
+            DateOnly yesterday = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
+            DateOnly evenEarlier = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-2));
+
+            Book bookOne = (await Book.Create("author", "One", "description", 10, yesterday, "publisher", yesterday)).Value!;
+            Book bookTwo = (await Book.Create("a", "Two", "d", 1, evenEarlier, "p", evenEarlier)).Value!;
+
+            bookOne.CopyTo(bookTwo);
+
+            bookOne.Author.Should().BeEquivalentTo(bookTwo.Author);
+            bookOne.Title.Should().BeEquivalentTo(bookTwo.Title);
+            bookOne.Description.Should().BeEquivalentTo(bookTwo.Description);
+            bookOne.Pages.Should().Be(bookTwo.Pages);
+            bookOne.DatePublished.Should().Be(bookTwo.DatePublished);
+            bookOne.Publisher.Should().BeEquivalentTo(bookOne.Publisher);
+            bookOne.DateRecieved.Should().Be(bookTwo.DateRecieved);
+        }
     }
 }
