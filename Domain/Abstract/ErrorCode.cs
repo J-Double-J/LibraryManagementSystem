@@ -56,6 +56,14 @@ namespace Domain.Abstract
                 throw new InvalidOperationException("This method can only be used if a combination of the error type and domain have already been combined.");
             }
 
+            foreach (string str in splitString)
+            {
+                if (string.IsNullOrEmpty(str))
+                {
+                    throw new InvalidOperationException("This method can only be used if the error code is represented as an error code: ErrorType.ErrorDomain.ErrorSpecification");
+                }
+            }
+
             return new ErrorCode(splitString[0], splitString[1], errorSpecification);
         }
 
@@ -65,7 +73,15 @@ namespace Domain.Abstract
 
             if(splitString.Length != 3 )
             {
-                throw new InvalidOperationException("This method can only be used if the error code is represented as an error code: ErrorType.ErrorDomain.ErrorSpecification ");
+                throw new InvalidOperationException("This method can only be used if the error code is represented as an error code: ErrorType.ErrorDomain.ErrorSpecification");
+            }
+
+            foreach(string str in splitString)
+            {
+                if (string.IsNullOrEmpty(str))
+                {
+                    throw new InvalidOperationException("This method can only be used if the error code is represented as an error code: ErrorType.ErrorDomain.ErrorSpecification");
+                }
             }
 
             return new ErrorCode(splitString[0], splitString[1], splitString[2]);

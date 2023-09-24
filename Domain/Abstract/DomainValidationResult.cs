@@ -5,7 +5,7 @@ namespace Domain.Abstract
 {
     public class DomainValidationResult : Result, IValidationResult
     {
-        private string? _highLevelErrorCode;
+        private ErrorCode? _highLevelErrorCode;
 
         private DomainValidationResult(ValidationError[] errors)
             : base(false, IValidationResult.ValidationError(errors[0].Code.ErrorDomain, errors[0].Code.ErrorSpecification))
@@ -25,18 +25,18 @@ namespace Domain.Abstract
         }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string? HighLevelErrorCode
+        public ErrorCode? HighLevelErrorCode
         {
             get
             {
-                if (!string.IsNullOrEmpty(_highLevelErrorCode))
+                if (_highLevelErrorCode != null && _highLevelErrorCode != ErrorCode.None)
                 {
                     return _highLevelErrorCode;
                 }
 
                 if (ValidationErrors.Length > 0)
                 {
-                    return ValidationErrors[0];
+                    return ValidationErrors[0].Code;
                 }
 
                 return null;

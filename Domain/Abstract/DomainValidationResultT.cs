@@ -27,9 +27,9 @@ namespace Domain.Abstract
                     return _highLevelErrorCode;
                 }
 
-                if(ValidationErrors.Length > 0)
+                if (ValidationErrors.Length > 0)
                 {
-                    return null;
+                    return ValidationErrors[0].Code;
                 }
 
                 return null;

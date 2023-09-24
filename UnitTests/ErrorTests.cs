@@ -6,7 +6,7 @@ namespace UnitTests
     public class ErrorTests
     {
         [Fact]
-        public async void ErrorToStringIsCode()
+        public void ErrorToStringIsCode()
         {
             Error error = TestReferenceHelper.TEST_ERROR;
             string errorImplicitString = error;
@@ -15,7 +15,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public async void ErrorIsEqual_IsCorrect()
+        public void ErrorIsEqual_IsCorrect()
         {
             Error error = TestReferenceHelper.TEST_ERROR;
             Error constructedError = new(new ErrorCode("UnitTestError", "Testing", "AnExpectedError"), "Some arbitrary message");
@@ -32,7 +32,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public async void NullEquivalenceIsFalse()
+        public void NullEquivalenceIsFalse()
         {
             Error error = TestReferenceHelper.TEST_ERROR;
             Error? constructedError = null;
@@ -45,7 +45,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public async void ConstructErrorCodeFromString()
+        public void ConstructErrorCodeFromString()
         {
             string errorString = "UnitTestError.Testing.AnExpectedError";
 
@@ -55,7 +55,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public async void ConstructFromTypeDomainString()
+        public void ConstructFromTypeDomainString()
         {
             string typeDomainString = "UnitTestError.Testing";
             string errorSpecification = "AnExpectedError";
@@ -67,10 +67,20 @@ namespace UnitTests
 
         [Theory]
         [InlineData("UnitTestError.Testing")]
-        //[InlineData("UnitTestError.Testing.")]
-        public async void CannotCOnstructFromInvalidString(string code)
+        [InlineData("UnitTestError.Testing.")]
+        public void CannotConstructFromInvalidString(string code)
         {
             Action action = () => ErrorCode.ConstructFromStringRepresentation(code);
+
+            action.Should().Throw<InvalidOperationException>();
+        }
+
+        [Theory]
+        [InlineData("UnitTestError")]
+        [InlineData("UnitTestError.")]
+        public void CannotConstuctFromIncompleteTypeDomainString(string code)
+        {
+            Action action = () => ErrorCode.ConstructFromCombinedTypeDomain(code, "specification");
 
             action.Should().Throw<InvalidOperationException>();
         }
