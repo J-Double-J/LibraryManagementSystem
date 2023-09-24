@@ -1,8 +1,7 @@
-﻿using Application.CQRS.BookCQRS.Commands.AddPatron;
-using Application.CQRS.BookCQRS.Commands.DeletePatron;
-using Application.CQRS.BookCQRS.Queries;
+﻿using Application.CQRS.PatronCQRS.Commands.AddPatron;
+using Application.CQRS.PatronCQRS.Commands.DeletePatron;
+using Application.CQRS.PatronCQRS.Queries;
 using Domain.Abstract;
-using Domain.Entities;
 using Domain.Entities.Patron;
 using Infrastructure.Errors;
 using MediatR;
@@ -14,7 +13,7 @@ namespace LibraryManagementSystem.Controllers
     [Route("[controller]")]
     public class PatronController : Controller
     {
-        private IMediator _mediator;
+        private readonly IMediator _mediator;
 
         public PatronController(IMediator mediator)
         {

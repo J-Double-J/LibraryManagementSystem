@@ -1,7 +1,7 @@
 ﻿using Domain.Abstract;
 using Domain.Entities.Patron;
 
-namespace Application.CQRS.BookCQRS.Queries
+namespace Application.CQRS.PatronCQRS.Queries
 {
     public class GetAllPatronsQuery : IQuery<IEnumerable<Patron>>
     {

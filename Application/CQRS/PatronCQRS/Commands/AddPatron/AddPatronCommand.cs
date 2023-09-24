@@ -1,7 +1,7 @@
 ﻿using Domain.Abstract;
 using Domain.Entities.Patron;
 
-namespace Application.CQRS.BookCQRS.Commands.AddPatron
+namespace Application.CQRS.PatronCQRS.Commands.AddPatron
 {
     public class AddPatronCommand : ICommand<Patron>
     {

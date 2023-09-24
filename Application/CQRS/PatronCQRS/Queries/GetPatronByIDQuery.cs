@@ -1,7 +1,7 @@
 ﻿using Domain.Abstract;
 using Domain.Entities.Patron;
 
-namespace Application.CQRS.BookCQRS.Queries
+namespace Application.CQRS.PatronCQRS.Queries
 {
     public class GetPatronByIDQuery : IQuery<Patron>
     {
@@ -23,7 +23,7 @@ namespace Application.CQRS.BookCQRS.Queries
 
             public async Task<Result<Patron>> Handle(GetPatronByIDQuery request, CancellationToken cancellationToken)
             {
-                return await _patronRepository.GetPatronByID(request.PatronGuid);    
+                return await _patronRepository.GetPatronByID(request.PatronGuid);
             }
         }
     }

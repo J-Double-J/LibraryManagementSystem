@@ -1,6 +1,6 @@
 ﻿using Domain.Abstract;
 
-namespace Application.CQRS.BookCQRS.Commands.DeletePatron
+namespace Application.CQRS.PatronCQRS.Commands.DeletePatron
 {
     public class DeletePatronCommand : ICommand
     {
