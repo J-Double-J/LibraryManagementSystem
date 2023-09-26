@@ -1,8 +1,5 @@
 ﻿using Domain.Abstract;
-using Domain.Errors;
-using Domain.Exceptions;
 using Domain.Primitives;
-using Fluent = FluentValidation.Results;
 
 namespace Domain.Entities
 {
@@ -59,6 +56,18 @@ namespace Domain.Entities
         /// Gets the publisher of the book.
         /// </summary>
         public string Publisher { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the book is checked out. Default is false.
+        /// </summary>
+        public bool IsCheckedOut { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets whether the book is available to patrons or if its only in inventory. Default is true.
+        /// </summary>
+        public bool AvailableToPatrons { get; set; } = true;
+
+        public ICollection<Checkout> Checkouts { get; set; }
 
         /// <summary>
         /// Gets the date the book was recieved into the system.`

@@ -1,5 +1,5 @@
 ﻿using Domain.Abstract;
-using Domain.Entities.Patron;
+using Domain.Entities;
 using FluentAssertions;
 
 namespace UnitTests

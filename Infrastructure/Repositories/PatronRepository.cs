@@ -1,6 +1,6 @@
 ﻿using Application;
 using Domain.Abstract;
-using Domain.Entities.Patron;
+using Domain.Entities;
 using Infrastructure.Errors;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,6 +1,5 @@
 ﻿using Application;
 using Domain.Entities;
-using Domain.Entities.Patron;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure
@@ -16,6 +15,22 @@ namespace Infrastructure
         public new async Task<int> SaveChanges()
         {
             return await base.SaveChangesAsync();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Checkout>()
+                .HasKey(c => c.CheckoutId);
+
+            modelBuilder.Entity<Checkout>()
+                .HasOne(c => c.Patron)
+                .WithMany(p => p.Checkouts)
+                .HasForeignKey(c => c.PatronId);
+
+            modelBuilder.Entity<Checkout>()
+                .HasOne(c => c.Book)
+                .WithMany(b => b.Checkouts)
+                .HasForeignKey(c => c.BookId);
         }
     }
 }

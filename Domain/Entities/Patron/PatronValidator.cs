@@ -1,7 +1,7 @@
 ﻿using Domain.CustomFluentValidation;
 using FluentValidation;
 
-namespace Domain.Entities.Patron
+namespace Domain.Entities
 {
     public class PatronValidator : LibraryValidator<Patron>
     {

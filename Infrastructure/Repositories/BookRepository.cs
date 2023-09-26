@@ -23,7 +23,6 @@ namespace Infrastructure
             catch (Exception ex)
             {
                 return Result.Failure(Enumerable.Empty<Book>(), new(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
-
             }
         }
 

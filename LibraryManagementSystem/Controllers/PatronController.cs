@@ -2,7 +2,7 @@
 using Application.CQRS.PatronCQRS.Commands.DeletePatron;
 using Application.CQRS.PatronCQRS.Queries;
 using Domain.Abstract;
-using Domain.Entities.Patron;
+using Domain.Entities;
 using Infrastructure.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

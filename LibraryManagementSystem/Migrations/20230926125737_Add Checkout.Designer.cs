@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LibraryManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230921022038_TryAddPatronTable")]
-    partial class TryAddPatronTable
+    [Migration("20230926125737_Add Checkout")]
+    partial class AddCheckout
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,6 +35,9 @@ namespace LibraryManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("AvailableToPatrons")
+                        .HasColumnType("boolean");
+
                     b.Property<DateOnly>("DatePublished")
                         .HasColumnType("date");
 
@@ -44,6 +47,9 @@ namespace LibraryManagementSystem.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsCheckedOut")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("Pages")
                         .HasColumnType("integer");
@@ -59,6 +65,41 @@ namespace LibraryManagementSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Checkout", b =>
+                {
+                    b.Property<int>("CheckoutId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CheckoutId"));
+
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("CheckoutDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("DueDate")
+                        .HasColumnType("date");
+
+                    b.Property<bool>("IsReturned")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("PatronId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("RenewalsLeft")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CheckoutId");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("PatronId");
+
+                    b.ToTable("Checkout");
                 });
 
             modelBuilder.Entity("Domain.Entities.Patron", b =>
@@ -81,6 +122,35 @@ namespace LibraryManagementSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Patrons");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Checkout", b =>
+                {
+                    b.HasOne("Domain.Entities.Book", "Book")
+                        .WithMany("Checkouts")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Patron", "Patron")
+                        .WithMany("Checkouts")
+                        .HasForeignKey("PatronId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Patron");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Book", b =>
+                {
+                    b.Navigation("Checkouts");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Patron", b =>
+                {
+                    b.Navigation("Checkouts");
                 });
 #pragma warning restore 612, 618
         }

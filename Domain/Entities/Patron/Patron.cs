@@ -1,8 +1,9 @@
 ﻿using Domain.Abstract;
+using Domain.Entities;
 using Domain.Primitives;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Entities.Patron
+namespace Domain.Entities
 {
     public class Patron : Entity
     {
@@ -22,6 +23,8 @@ namespace Domain.Entities.Patron
         public string LastName { get; set; }
 
         public int Age { get; set; }
+
+        public ICollection<Checkout> Checkouts { get; set; }
 
         [NotMapped]
         public bool IsAdult { get { return Age >= ADULT_AGE_CUTOFF; } }
