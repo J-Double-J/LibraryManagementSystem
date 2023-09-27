@@ -3,6 +3,7 @@ using Domain.Abstract;
 using Domain.Entities;
 using Infrastructure.Errors;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Infrastructure
 {
@@ -117,6 +118,30 @@ namespace Infrastructure
             catch (Exception ex)
             {
                 return Result.Failure<Book>(null, new(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
+            }
+        }
+
+        public async Task<Result> CheckoutBook(Book book)
+        {
+            try
+            {
+                Book? existingBook = await _context.Books.FindAsync(book.Id);
+
+                if (existingBook is null)
+                {
+                    return Result.Failure(new(InfrastructureErrors.BookRepositoryErrors.BOOK_ID_NOT_FOUND,
+                                              $"No book with the ID `{book.Id}` was found."));
+                }
+                
+                existingBook.UpdateBookToCheckedOut();
+
+                await _context.SaveChanges();
+
+                return Result.Success();
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure(new(InfrastructureErrors.BookRepositoryErrors.BOOK_DB_ERROR, ex.Message));
             }
         }
     }

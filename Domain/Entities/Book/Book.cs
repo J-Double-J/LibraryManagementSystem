@@ -106,5 +106,15 @@ namespace Domain.Entities
             book.Publisher = Publisher;
             book.DateRecieved = DateRecieved;
         }
+
+        public bool IsAbleToBeCheckedOut()
+        {
+            return !IsCheckedOut && AvailableToPatrons;
+        }
+
+        public void UpdateBookToCheckedOut()
+        {
+            IsCheckedOut = true;
+        }
     }
 }

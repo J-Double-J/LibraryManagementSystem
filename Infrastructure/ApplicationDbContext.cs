@@ -12,6 +12,8 @@ namespace Infrastructure
 
         public DbSet<Patron> Patrons { get; set; }
 
+        public DbSet<Checkout> Checkout { get; set; }
+
         public new async Task<int> SaveChanges()
         {
             return await base.SaveChangesAsync();

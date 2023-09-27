@@ -7,6 +7,7 @@ namespace Application
     {
         DbSet<Book> Books { get; set; }
         DbSet<Patron> Patrons { get; set; }
+        DbSet<Checkout> Checkout { get; set; }
 
         Task<int> SaveChanges();
     }

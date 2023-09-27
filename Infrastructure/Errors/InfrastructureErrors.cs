@@ -18,5 +18,10 @@ namespace Infrastructure.Errors
             public static readonly ErrorCode PATRON_ID_NOT_FOUND = new("Database", "PatronRepository", "IDNotFound");
             public static readonly ErrorCode PATRON_DB_ERROR = new("Database", "PatronRepository", "DbError");
         }
+
+        public static class CheckoutRepositoryErrors
+        {
+            public static readonly ErrorCode CHECKOUT_DB_ERROR = new("Database", "CheckoutRepository", "DbError");
+        }
     }
 }

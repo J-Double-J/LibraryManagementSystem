@@ -1,4 +1,5 @@
 ﻿using Application;
+using Application.Interfaces;
 using Application.Interfaces.Configuration;
 using Infrastructure.Configuration;
 using Infrastructure.Repositories;
@@ -12,6 +13,7 @@ namespace Infrastructure
         {
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IPatronRepository, PatronRepository>();
+            services.AddScoped<ICheckoutRepository, CheckoutRepository>();
 
             services.AddSingleton<ILibraryManagementConfiguration, LibraryManagementConfiguration>();
 
