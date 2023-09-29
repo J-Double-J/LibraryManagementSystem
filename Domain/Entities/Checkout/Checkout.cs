@@ -37,6 +37,7 @@ namespace Domain.Entities
         public int CheckoutId { get; set; }
         public DateOnly CheckoutDate { get; set; }
         public DateOnly DueDate { get; set; }
+        public DateOnly? DateReturned { get; set; }
         public int RenewalsLeft { get; set; } = 1;
         public bool IsReturned { get; set; } = false;
 
@@ -66,6 +67,7 @@ namespace Domain.Entities
         {
             IsReturned = true;
             Book.IsCheckedOut = false;
+            DateReturned = DateOnly.FromDateTime(DateTime.UtcNow);
         }
     }
 }
