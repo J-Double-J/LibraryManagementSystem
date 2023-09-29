@@ -69,5 +69,17 @@ namespace Domain.Entities
             Book.IsCheckedOut = false;
             DateReturned = DateOnly.FromDateTime(DateTime.UtcNow);
         }
+
+        public bool TryRenew()
+        {
+            if (RenewalsLeft <= 0)
+            {
+                return false;
+            }
+            
+            RenewalsLeft--;
+            DueDate = DueDate.AddDays(7);
+            return true;
+        }
     }
 }

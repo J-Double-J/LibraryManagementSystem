@@ -32,6 +32,33 @@ namespace Infrastructure.Repositories
             }
         }
 
+        public async Task<Result<bool>> Renew(Guid bookGuid)
+        {
+            try
+            {
+                Checkout? checkout = await _context.Checkout.Where(c => !c.IsReturned && c.Book.Id == bookGuid).FirstOrDefaultAsync();
+
+                if (checkout is null)
+                {
+                    return Result.Failure(false, new(InfrastructureErrors.CheckoutRepositoryErrors.CHECKOUT_TRANSACTION_NOT_FOUND,
+                                          $"Checkout transaction involving '{bookGuid}' not found."));
+                }
+
+                bool didSuccessfullyRenew = checkout.TryRenew();
+
+                if (didSuccessfullyRenew)
+                {
+                    await _context.SaveChanges();
+                }
+
+                return Result.Success(didSuccessfullyRenew);
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure(false, new(InfrastructureErrors.CheckoutRepositoryErrors.CHECKOUT_DB_ERROR, ex.Message));
+            }
+        }
+
         public async Task<Result> ReturnBook(Guid bookGuid)
         {
             try
@@ -60,7 +87,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                return Result.Failure(new(InfrastructureErrors.CheckoutRepositoryErrors.CHECKOUT_DB_ERROR, ex.Message));
+                return Result.Failure(false, new(InfrastructureErrors.CheckoutRepositoryErrors.CHECKOUT_DB_ERROR, ex.Message));
             }
         }
     }

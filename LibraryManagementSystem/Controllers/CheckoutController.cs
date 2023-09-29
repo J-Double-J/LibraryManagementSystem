@@ -51,5 +51,23 @@ namespace LibraryManagementSystem.Controllers
 
             return StatusCode(500, result.Error);
         }
+
+        [HttpPut("renew")]
+        public async Task<IActionResult> RenewBook([FromBody] RenewCheckoutCommand command)
+        {
+            Result<bool> result = await _sender.Send(command);
+
+            if (result.IsSuccess)
+            {
+                if (result.Value == true)
+                {
+                    return Ok("Your book is renewed for another session");
+                }
+
+                return UnprocessableEntity("Unable to renew your book. Book has reached its maximum renewal limit.");
+            }
+
+            return StatusCode(500, result.Error);
+        }
     }
 }
