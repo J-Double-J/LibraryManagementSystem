@@ -22,6 +22,8 @@ namespace Infrastructure.Errors
         public static class CheckoutRepositoryErrors
         {
             public static readonly ErrorCode CHECKOUT_DB_ERROR = new("Database", "CheckoutRepository", "DbError");
+            public static readonly ErrorCode CHECKED_OUT_BOOK_ID_NOT_FOUND = new("Database", "CheckoutRepository", "CheckedOutBookNotFound");
+            public static readonly ErrorCode CHECKOUT_TRANSACTION_NOT_FOUND = new("Database", "CheckoutRepository", "CheckoutTransactionNotFound");
         }
     }
 }

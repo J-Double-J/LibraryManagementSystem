@@ -32,13 +32,8 @@ namespace Application.CQRS.CheckoutCQRS
 
             public async Task<Result> Handle(CheckoutBookCommand request, CancellationToken cancellationToken)
             {
-                Task<Result<Patron>> patronFetchTask = _patronRepository.GetPatronByID(request.PatronGuid);
-                Task<Result<Book>> bookFetchTask = _bookRepository.GetBookByID(request.BookGuid);
-
-                await Task.WhenAll(patronFetchTask, bookFetchTask);
-
-                Result<Patron> patronResult = patronFetchTask.Result;
-                Result<Book> bookResult = bookFetchTask.Result;
+                Result<Patron> patronResult = await _patronRepository.GetPatronByID(request.PatronGuid);
+                Result<Book> bookResult = await _bookRepository.GetBookByID(request.BookGuid);
 
                 if (patronResult.IsFailure)
                 {

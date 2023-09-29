@@ -45,7 +45,7 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                Patron? patron = _context.Patrons.FirstOrDefault(p => p.Id == id);
+                Patron? patron = await _context.Patrons.FirstOrDefaultAsync(p => p.Id == id);
 
                 if (patron is null)
                 {

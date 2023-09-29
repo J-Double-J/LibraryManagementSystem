@@ -67,7 +67,7 @@ namespace Domain.Entities
         /// </summary>
         public bool AvailableToPatrons { get; set; } = true;
 
-        public ICollection<Checkout> Checkouts { get; set; }
+        public ICollection<Checkout>? Checkouts { get; set; }
 
         /// <summary>
         /// Gets the date the book was recieved into the system.`

@@ -9,7 +9,9 @@ namespace Domain.Entities
         /// <summary>
         /// Constructor for EFCore only.
         /// </summary>
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Checkout() { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         private Checkout(DateOnly checkoutDate,
                         DateOnly dueDate,
@@ -58,6 +60,12 @@ namespace Domain.Entities
             DomainValidationResult<Checkout> result = await validator.ValidateAsyncGetDomainResult(checkout);
 
             return result;
+        }
+
+        public void ReturnBook()
+        {
+            IsReturned = true;
+            Book.IsCheckedOut = false;
         }
     }
 }

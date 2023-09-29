@@ -1,6 +1,5 @@
 ﻿using Application.CQRS.CheckoutCQRS;
 using Domain.Abstract;
-using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,13 +17,31 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CheckoutBook([FromBody]CheckoutBookCommand command)
+        public async Task<IActionResult> CheckoutBook([FromBody] CheckoutBookCommand command)
         {
             Result result = await _sender.Send(command);
 
             if (result.IsSuccess)
             {
                 return Ok("Book successfully checked out!");
+            }
+
+            if (result is DomainValidationResult validationResult)
+            {
+                return BadRequest(validationResult.ValidationErrors);
+            }
+
+            return StatusCode(500, result.Error);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> ReturnBook([FromBody] ReturnBookCommand command)
+        {
+            Result result = await _sender.Send(command);
+
+            if(result.IsSuccess)
+            {
+                return Ok("Book successfully returned!");
             }
 
             if (result is DomainValidationResult validationResult)
