@@ -79,7 +79,7 @@ namespace Domain.Entities
 
             if (daysToAdd <= 0)
             {
-                Result.Failure(false, new Error (new ErrorCode("Entity", "Renewal", "InvalidDaysToAdd"),
+                return Result.Failure(false, new Error (new ErrorCode("Entity", "Renewal", "InvalidDaysToAdd"),
                                      "Days to add must be greater than 0."));
             }
 
