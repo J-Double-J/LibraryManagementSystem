@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Interfaces.Configuration;
 using Domain.Abstract;
 using Domain.Entities;
 
@@ -20,14 +21,17 @@ namespace Application.CQRS.CheckoutCQRS
             IPatronRepository _patronRepository;
             IBookRepository _bookRepository;
             ICheckoutRepository _checkoutRepository;
+            ILibraryManagementConfiguration _configuration;
 
             public CheckoutBookCommandHandler(IPatronRepository patronRepository,
                                               IBookRepository bookRepository,
-                                              ICheckoutRepository checkoutRepository)
+                                              ICheckoutRepository checkoutRepository,
+                                              ILibraryManagementConfiguration configuration)
             {
                 _patronRepository = patronRepository;
                 _bookRepository = bookRepository;
                 _checkoutRepository = checkoutRepository;
+                _configuration = configuration;
             }
 
             public async Task<Result> Handle(CheckoutBookCommand request, CancellationToken cancellationToken)
@@ -46,8 +50,8 @@ namespace Application.CQRS.CheckoutCQRS
                 }
 
                 Result<Checkout> checkoutResult = await Checkout.Create(DateOnly.FromDateTime(DateTime.UtcNow),
-                                                                  DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)),
-                                                                  1,
+                                                                  DateOnly.FromDateTime(DateTime.UtcNow.AddDays(_configuration.RenewalPolicy.RenewalPeriodInDays)),
+                                                                  _configuration.RenewalPolicy.MaximumRenewals,
                                                                   false,
                                                                   patronResult.Value,
                                                                   bookResult.Value);

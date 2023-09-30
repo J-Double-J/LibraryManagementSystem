@@ -1,4 +1,5 @@
-﻿using Fluent = FluentValidation.Results;
+﻿using FluentValidation.Results;
+using Fluent = FluentValidation.Results;
 
 namespace Domain.CustomFluentValidation
 {
@@ -6,6 +7,12 @@ namespace Domain.CustomFluentValidation
     {
         public LibraryFluentValidationResult() { Errors = new(); }
 
-        public LibraryValidatorType ValidationLevel { get; set; }
+        public LibraryFluentValidationResult(ValidationResult result, LibraryValidatorType libraryValidatorType)
+        {
+            Errors = result.Errors;
+            LibraryValidatorType = libraryValidatorType;
+        }
+
+        public LibraryValidatorType LibraryValidatorType { get; set; }
     }
 }

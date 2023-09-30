@@ -2,6 +2,7 @@
 {
     public interface ILibraryManagementConfiguration
     {
-        int MaximumNumberOfCopiesOfBook { get; }
+        public int MaximumNumberOfCopiesOfBook { get; }
+        public IRenewalPolicy RenewalPolicy { get; }
     }
 }

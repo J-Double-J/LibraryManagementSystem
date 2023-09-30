@@ -16,7 +16,7 @@ namespace LibraryManagementSystem.Controllers
             _sender = sender;
         }
 
-        [HttpPost]
+        [HttpPost()]
         public async Task<IActionResult> CheckoutBook([FromBody] CheckoutBookCommand command)
         {
             Result result = await _sender.Send(command);
@@ -34,7 +34,7 @@ namespace LibraryManagementSystem.Controllers
             return StatusCode(500, result.Error);
         }
 
-        [HttpPut]
+        [HttpPut("return")]
         public async Task<IActionResult> ReturnBook([FromBody] ReturnBookCommand command)
         {
             Result result = await _sender.Send(command);

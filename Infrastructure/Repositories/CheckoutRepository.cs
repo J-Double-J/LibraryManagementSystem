@@ -1,5 +1,6 @@
 ﻿using Application;
 using Application.Interfaces;
+using Application.Interfaces.Configuration;
 using Domain.Abstract;
 using Domain.Entities;
 using Infrastructure.Errors;
@@ -10,10 +11,12 @@ namespace Infrastructure.Repositories
     public class CheckoutRepository : ICheckoutRepository
     {
         IApplicationDbContext _context;
+        ILibraryManagementConfiguration _configuration;
 
-        public CheckoutRepository(IApplicationDbContext context)
+        public CheckoutRepository(IApplicationDbContext context, ILibraryManagementConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public async Task<Result> AddCheckoutTransaction(Checkout checkout)
@@ -44,14 +47,19 @@ namespace Infrastructure.Repositories
                                           $"Checkout transaction involving '{bookGuid}' not found."));
                 }
 
-                bool didSuccessfullyRenew = checkout.TryRenew();
+                Result<bool> didSuccessfullyRenewResult = checkout.TryRenew(_configuration.RenewalPolicy.RenewalPeriodInDays);
 
-                if (didSuccessfullyRenew)
+                if (didSuccessfullyRenewResult.IsFailure)
+                {
+                    return didSuccessfullyRenewResult;
+                }
+
+                if (didSuccessfullyRenewResult.Value == true)
                 {
                     await _context.SaveChanges();
                 }
 
-                return Result.Success(didSuccessfullyRenew);
+                return Result.Success(didSuccessfullyRenewResult.Value);
             }
             catch (Exception ex)
             {

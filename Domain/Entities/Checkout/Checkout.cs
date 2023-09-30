@@ -70,13 +70,19 @@ namespace Domain.Entities
             DateReturned = DateOnly.FromDateTime(DateTime.UtcNow);
         }
 
-        public bool TryRenew()
+        public Result<bool> TryRenew(int daysToAdd)
         {
             if (RenewalsLeft <= 0)
             {
                 return false;
             }
-            
+
+            if (daysToAdd <= 0)
+            {
+                Result.Failure(false, new Error (new ErrorCode("Entity", "Renewal", "InvalidDaysToAdd"),
+                                     "Days to add must be greater than 0."));
+            }
+
             RenewalsLeft--;
             DueDate = DueDate.AddDays(7);
             return true;

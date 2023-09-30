@@ -5,15 +5,15 @@ namespace Domain.CustomFluentValidation
 {
     public static class FluentValidationExtensions
     {
-        public static LibraryFluentValidationResult ToLibraryFluentValidationResult(this ValidationResult validationResult, LibraryValidatorType validatorLevel)
+        public static LibraryFluentValidationResult ToLibraryFluentValidationResult(this ValidationResult validationResult, LibraryValidatorType libraryValidatorType)
         {
             return new LibraryFluentValidationResult()
             {
-                ValidationLevel = validatorLevel,
+                LibraryValidatorType = libraryValidatorType,
 
                 // Error codes will be overriden at the rule level in case of mixed.
-                Errors = validatorLevel != LibraryValidatorType.Mixed
-                            ? PrefixErrorCodesToErrors(validationResult, validatorLevel)
+                Errors = libraryValidatorType != LibraryValidatorType.Mixed
+                            ? PrefixErrorCodesToErrors(validationResult, libraryValidatorType)
                             : validationResult.Errors
             };
         }
