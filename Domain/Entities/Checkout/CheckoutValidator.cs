@@ -13,6 +13,10 @@ namespace Domain.Entities
 
             RuleFor(c => c.RenewalsLeft).GreaterThanOrEqualTo(0);
 
+            RuleFor(c => c.IsReturned).Equal(false).When(c => c.DateReturned is null);
+
+            RuleFor(c => c.IsReturned).Equal(true).When(c => c.DateReturned is not null);
+
             RuleFor(c => c.Patron).NotNull();
 
             RuleFor(c => c.Book).NotNull();
