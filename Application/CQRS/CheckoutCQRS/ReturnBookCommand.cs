@@ -7,12 +7,10 @@ namespace Application.CQRS.CheckoutCQRS
 {
     public class ReturnBookCommand : ICommand
     {
-        public Guid PatronGuid { get; init; }
         public Guid BookGuid { get; init; }
 
-        public ReturnBookCommand(Guid patronGuid, Guid bookGuid)
+        public ReturnBookCommand(Guid bookGuid)
         {
-            PatronGuid = patronGuid;
             BookGuid = bookGuid;
         }
 

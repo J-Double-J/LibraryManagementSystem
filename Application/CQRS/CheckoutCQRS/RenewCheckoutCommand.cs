@@ -21,7 +21,7 @@ namespace Application.CQRS.CheckoutCQRS
                 _checkoutRepository = checkoutRepository;
             }
 
-            async Task<Result<bool>> IRequestHandler<RenewCheckoutCommand, Result<bool>>.Handle(RenewCheckoutCommand request, CancellationToken cancellationToken)
+            public async Task<Result<bool>> Handle(RenewCheckoutCommand request, CancellationToken cancellationToken)
             {
                 return await _checkoutRepository.Renew(request.BookGuid);
             }
